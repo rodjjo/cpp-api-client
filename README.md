@@ -1,12 +1,12 @@
 # Async C++ JSNO API Client
 
-## Environment
+## Build and test
 
 Install the building tools
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y build-essential cmake
+sudo apt-get install -y build-essential cmake lcov
 ```
 
 Install the dependencies:
@@ -16,17 +16,23 @@ sudo apt-get update
 sudo apt-get install -y libboost1.58-all-dev libfltk1.3-dev libjsoncpp-dev
 ```
 
-## Build
-
 Build the project
 
 ```bash
 cmake --build .
 ```
 
-## Testing
-
 Run the tests
-```
+
+```bash
 ctest
 ```
+
+Coverage
+
+```bash
+cmake -DCMAKE_BUILD_TYPE=Debug .
+make apiclient_coverage
+```
+
+## Usage

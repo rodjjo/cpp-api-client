@@ -1,6 +1,9 @@
 CMakeCache.txt
 *.cmake
+!CodeCoverage.cmake
+!cmake-modules/*
 Makefile
 CMakeFiles/
 build/
 Testing/
+apiclient_coverage/
