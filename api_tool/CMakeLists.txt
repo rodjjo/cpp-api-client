@@ -1,4 +1,4 @@
-file(GLOB Sources "*.cc")
+file(GLOB Sources "*.cpp")
 
 add_executable(api-tool ${Sources})
 

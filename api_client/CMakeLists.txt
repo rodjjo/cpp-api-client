@@ -1,26 +1,16 @@
-file(GLOB Sources "*.cc")
-file(GLOB Testing "test/*.cc")
+file(GLOB Sources "*.cpp")
+file(GLOB Testing "test/*.cpp")
 set(APICLIENT_HEADERS "apiclient/apiclient.h")
 
 find_package(Boost COMPONENTS system filesystem unit_test_framework REQUIRED)
 
 add_library(api-client STATIC ${Sources})
 
-install(TARGETS api-client
-        ARCHIVE DESTINATION lib
-        LIBRARY DESTINATION lib
-        COMPONENT library)
-
-install(FILES ${APICLIENT_HEADERS} 
-        DESTINATION include/apiclient)
-
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 
 add_executable(apiclienttest ${Sources} ${Testing})
 
 add_test(NAME apiclient COMMAND apiclienttest)
-
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake-modules)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
     include(CodeCoverage)
@@ -41,3 +31,11 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 SET_TARGET_PROPERTIES(api-client PROPERTIES LINKER_LANGUAGE C)
+
+install(TARGETS api-client
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        COMPONENT library)
+
+install(FILES ${APICLIENT_HEADERS} 
+        DESTINATION include/apiclient)

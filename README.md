@@ -1,4 +1,4 @@
-# Async C++ JSNO API Client
+# Async C++ JSON API Client
 
 ## Build and test
 
@@ -41,5 +41,16 @@ Show coverage report
 # you can replace firefox browser if you want to
 firefox apiclient_coverage/index.html
 ```
+
+Linting Checks
+
+```bash
+make apiclient_lint
+```
+
+## Colaborate
+
+Please follow the style guide:
+https://google.github.io/styleguide/cppguide.html
 
 ## Usage

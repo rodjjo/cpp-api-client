@@ -1,3 +1,8 @@
+/* 
+ * Copyright (C) 2018 by Rodrigo Antonio de Araujo
+ * 
+ */
+
 #include <apiclient/apiclient.h>
 #include <cstdio>
 
