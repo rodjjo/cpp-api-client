@@ -1,6 +1,6 @@
 file(GLOB Sources "*.cc")
 file(GLOB Testing "test/*.cc")
-set(APICLIENT_HEADERS "apiclient.h")
+set(APICLIENT_HEADERS "apiclient/apiclient.h")
 
 find_package(Boost COMPONENTS system filesystem unit_test_framework REQUIRED)
 
