@@ -6,4 +6,4 @@ Makefile
 CMakeFiles/
 build/
 Testing/
-apiclient_coverage/
+*_coverage/
