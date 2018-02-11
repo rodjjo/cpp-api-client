@@ -35,4 +35,11 @@ cmake -DCMAKE_BUILD_TYPE=Debug .
 make apiclient_coverage
 ```
 
+Show coverage report
+
+```bash
+# you can replace firefox browser if you want to
+firefox apiclient_coverage/index.html
+```
+
 ## Usage
