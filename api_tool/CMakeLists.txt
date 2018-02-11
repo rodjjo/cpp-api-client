@@ -1,5 +1,5 @@
 file(GLOB Sources "*.cc")
 
-add_executable(ApiTool ${Sources})
+add_executable(api-tool ${Sources})
 
-SET_TARGET_PROPERTIES(ApiTool PROPERTIES LINKER_LANGUAGE C)
+SET_TARGET_PROPERTIES(api-tool PROPERTIES LINKER_LANGUAGE C)

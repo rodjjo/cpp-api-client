@@ -1,12 +1,23 @@
 file(GLOB Sources "*.cc")
 file(GLOB Testing "test/*.cc")
+set(APICLIENT_HEADERS "apiclient.h")
+
 find_package(Boost COMPONENTS system filesystem unit_test_framework REQUIRED)
 
 add_library(api-client STATIC ${Sources})
 
+install(TARGETS api-client
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        COMPONENT library)
+
+install(FILES ${APICLIENT_HEADERS} 
+        DESTINATION include/apiclient)
+
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 
 add_executable(apiclienttest ${Sources} ${Testing})
+
 add_test(NAME apiclient COMMAND apiclienttest)
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake-modules)
