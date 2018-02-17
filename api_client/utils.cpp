@@ -9,7 +9,7 @@
 namespace apiclient {
 namespace {
   std::regex url_regex1(
-    "^(http|https)://([_a-z0-9\\-\\.]+)(\\:[0-9]+\\/|\\/).*");
+    "^(http|https)://([_a-z0-9\\-\\.]+)(\\:[0-9]+|\\:[0-9]+\\/|\\/).*");
   std::regex url_regex2(
     "^(http|https)://([_a-z0-9\\-\\.]+).*");
   std::regex content_regex("^Content-Type", std::regex_constants::icase);
@@ -43,7 +43,7 @@ url_fragments_t decompose_url(const std::string& url) {
     }
     result.host = base_match[2].str();
     if (base_match.size() == 4 && base_match[3].str() != "/") {
-      result.port = atoi(base_match[3].str().c_str());
+      result.port = atoi(base_match[3].str().c_str() + 1);
     }
   }
 
