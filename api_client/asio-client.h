@@ -10,7 +10,7 @@
 namespace apiclient {
 
 class ApiClient: public ApiBase {
-    explicit ApiClient(const std::string& client);
+    explicit ApiClient(const std::string& base_url);
     virtual ~ApiClient();
     Json::Value get(const std::string& query_string,
         int timeout = 0, const ApiHeaders *headers = NULL);
@@ -45,6 +45,8 @@ class ApiClient: public ApiBase {
         const Json::Value& body,
         std::shared_ptr<ResponseHandler> response_handler,
         int timeout = 0, const ApiHeaders *headers = NULL);
+    private:
+        std::string base_url_;
 };
 
 }  // namespace apiclient

@@ -32,7 +32,9 @@ cmake --build .
 Run the tests
 
 ```bash
-ctest
+make test
+# or
+make CTEST_OUTPUT_ON_FAILURE=1 test
 ```
 
 Coverage
