@@ -1,0 +1,5 @@
+repos:
+  - repo: git@bitbucket.org:rodjjo/cpp-api-client.git
+    sha: master
+    hooks:
+    - id: cpplint

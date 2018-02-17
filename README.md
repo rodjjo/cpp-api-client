@@ -6,7 +6,8 @@ Install the building tools
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y build-essential cmake lcov
+sudo apt-get install -y build-essential cmake lcov python3-pip
+sudo pip3 install setuptools pre-commit
 ```
 
 Install the dependencies:
@@ -14,6 +15,12 @@ Install the dependencies:
 ```bash
 sudo apt-get update
 sudo apt-get install -y libboost1.58-all-dev libfltk1.3-dev libjsoncpp-dev
+```
+
+Install pre-commit
+
+```bash
+pre-commit install
 ```
 
 Build the project
