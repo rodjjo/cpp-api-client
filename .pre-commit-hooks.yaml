@@ -1,6 +1,0 @@
-- id: cpplint
-  name: cpplint check
-  description: Checks the code style
-  entry: make apiclient_lint
-  language: system
-  types: [text]

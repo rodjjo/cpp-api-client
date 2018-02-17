@@ -1,4 +1,12 @@
 repos:
+  - repo: local
+    hooks:
+      - id: cpplint
+        name: cpplint check
+        description: Checks the code style
+        entry: make apiclient_lint
+        language: system
+        types: [text]
   - repo: https://github.com/pre-commit/pre-commit-hooks
     sha: v1.2.0
     hooks:
