@@ -27,38 +27,38 @@ class ApiBase {
  public:
     virtual ~ApiBase();
     virtual Json::Value get(const std::string& query_string,
-        const ApiHeaders *headers = NULL) = 0;
+        int timeout = 0, const ApiHeaders *headers = NULL) = 0;
     virtual void get(const std::string& query_string,
         std::shared_ptr<ResponseHandler> response_handler,
-        const ApiHeaders *headers = NULL) = 0;
+        int timeout = 0, const ApiHeaders *headers = NULL) = 0;
     virtual Json::Value post(const std::string& query_string,
         const Json::Value& body,
-        const ApiHeaders *headers = NULL) = 0;
+        int timeout = 0, const ApiHeaders *headers = NULL) = 0;
     virtual void post(const std::string& query_string,
         const Json::Value& body,
         std::shared_ptr<ResponseHandler> response_handler,
-        const ApiHeaders *headers = NULL) = 0;
+        int timeout = 0, const ApiHeaders *headers = NULL) = 0;
     virtual Json::Value put(const std::string& query_string,
         const Json::Value& body,
-        const ApiHeaders *headers = NULL) = 0;
+        int timeout = 0, const ApiHeaders *headers = NULL) = 0;
     virtual void put(const std::string& query_string,
         const Json::Value& body,
         std::shared_ptr<ResponseHandler> response_handler,
-        const ApiHeaders *headers = NULL) = 0;
+        int timeout = 0, const ApiHeaders *headers = NULL) = 0;
     virtual Json::Value del(const std::string& query_string,
         const Json::Value& body,
-        const ApiHeaders *headers = NULL) = 0;
+        int timeout = 0, const ApiHeaders *headers = NULL) = 0;
     virtual void del(const std::string& query_string,
         const Json::Value& body,
         std::shared_ptr<ResponseHandler> response_handler,
-        const ApiHeaders *headers = NULL) = 0;
+        int timeout = 0, const ApiHeaders *headers = NULL) = 0;
     virtual Json::Value patch(const std::string& query_string,
         const Json::Value& body,
-        const ApiHeaders *headers = NULL) = 0;
+        int timeout = 0, const ApiHeaders *headers = NULL) = 0;
     virtual void patch(const std::string& query_string,
         const Json::Value& body,
         std::shared_ptr<ResponseHandler> response_handler,
-        const ApiHeaders *headers = NULL) = 0;
+        int timeout = 0, const ApiHeaders *headers = NULL) = 0;
 };
 
 std::shared_ptr<ApiBase> build(const std::string& base_url);
