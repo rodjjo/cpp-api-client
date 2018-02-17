@@ -1,5 +1,6 @@
 repos:
-  - repo: git@bitbucket.org:rodjjo/cpp-api-client.git
-    sha: master
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    sha: v1.2.0
     hooks:
-    - id: cpplint
+      - id: trailing-whitespace
+
