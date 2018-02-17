@@ -1,6 +1,16 @@
 cmake_minimum_required (VERSION 2.6)
 
+set (CMAKE_CXX_STANDARD 11)
+
 project(ApiClient C CXX)
+
+find_package(Boost COMPONENTS system filesystem unit_test_framework REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(JSONCPP jsoncpp)
+include_directories("${JSONCPP_INCLUDE_DIRS}")
+link_libraries(${JSONCPP_LIBRARIES})
+
+
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake-modules)
 
@@ -17,13 +27,13 @@ include(CppLint)
 add_subdirectory("api_client")
 add_subdirectory("api_tool")
 
-file(GLOB LintSources 
-    "ap_client/*.cpp" 
-    "ap_client/*.h" 
-    "ap_client/apiclient/*.h" 
-    "ap_client/test/*.h" 
-    "ap_client/test/*.cpp" 
-    "api_tool/*.cpp" 
+file(GLOB LintSources
+    "ap_client/*.cpp"
+    "ap_client/*.h"
+    "ap_client/apiclient/*.h"
+    "ap_client/test/*.h"
+    "ap_client/test/*.cpp"
+    "api_tool/*.cpp"
     "api_tool/*.h")
 
 add_style_check_target(apiclient_lint ${LintSources})
