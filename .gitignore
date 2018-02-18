@@ -1,6 +1,7 @@
 CMakeCache.txt
 *.cmake
 *.base
+.vscode/
 !CodeCoverage.cmake
 !cmake-modules/*
 Makefile
