@@ -10,8 +10,6 @@ pkg_check_modules(JSONCPP jsoncpp)
 include_directories("${JSONCPP_INCLUDE_DIRS}")
 link_libraries(${JSONCPP_LIBRARIES})
 
-
-
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake-modules)
 
 include_directories(ApiClient)
@@ -28,11 +26,11 @@ add_subdirectory("api_client")
 add_subdirectory("api_tool")
 
 file(GLOB LintSources
-    "ap_client/*.cpp"
-    "ap_client/*.h"
-    "ap_client/apiclient/*.h"
-    "ap_client/test/*.h"
-    "ap_client/test/*.cpp"
+    "api_client/*.cpp"
+    "api_client/*.h"
+    "api_client/apiclient/*.h"
+    "api_client/test/*.h"
+    "api_client/test/*.cpp"
     "api_tool/*.cpp"
     "api_tool/*.h")
 
