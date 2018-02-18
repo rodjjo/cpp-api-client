@@ -6,7 +6,7 @@ add_library(api-client STATIC ${Sources})
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 
-add_executable(apiclienttest ${Sources} ${Testing})
+add_executable(apiclienttest ${Testing} ${Sources})
 
 add_test(NAME apiclient COMMAND apiclienttest)
 

@@ -1,12 +1,21 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-
+#include <exception>
+#include "utils.h"
+#include "api-exception.h"
 #include "asio-client.h"
 
 namespace apiclient {
 
 ApiClient::ApiClient(const std::string& base_url) : base_url_(base_url) {
+  url_fragments_t fragments = apiclient::decompose_url(base_url);
+  if (!fragments.valid) {
+    throw ApiException((std::string("Invalid url: ") + base_url).c_str());
+  }
+  secure_ = fragments.secure;
+  host_ = fragments.host;
+  port_ = fragments.port;
 }
 
 ApiClient::~ApiClient() {
