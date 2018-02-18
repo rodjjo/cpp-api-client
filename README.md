@@ -26,6 +26,7 @@ pre-commit install
 Build the project
 
 ```bash
+cmake .
 cmake --build .
 ```
 
