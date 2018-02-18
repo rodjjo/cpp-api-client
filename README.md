@@ -23,7 +23,7 @@ Install pre-commit
 pre-commit install
 ```
 
-Build the project
+Generate and build the project
 
 ```bash
 cmake .
