@@ -1,10 +1,10 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#include <exception>
-#include "utils.h"
-#include "api-exception.h"
-#include "asio-client.h"
+#include "api_client/utils.h"
+#include "api_client/api-exception.h"
+#include "api_client/asio-client.h"
+
 
 namespace apiclient {
 
@@ -16,6 +16,7 @@ ApiClient::ApiClient(const std::string& base_url) : base_url_(base_url) {
   secure_ = fragments.secure;
   host_ = fragments.host;
   port_ = fragments.port;
+
 }
 
 ApiClient::~ApiClient() {
@@ -27,7 +28,7 @@ Json::Value ApiClient::get(const std::string& query_string,
 }
 
 void ApiClient::get(const std::string& query_string,
-        std::shared_ptr<ResponseHandler> response_handler,
+        ResponseHandler response_handler,
         int timeout, const ApiHeaders *headers) {
 }
 
@@ -39,7 +40,7 @@ Json::Value ApiClient::post(const std::string& query_string,
 
 void ApiClient::post(const std::string& query_string,
         const Json::Value& body,
-        std::shared_ptr<ResponseHandler> response_handler,
+        ResponseHandler response_handler,
         int timeout, const ApiHeaders *headers) {
 }
 
@@ -51,7 +52,7 @@ Json::Value ApiClient::put(const std::string& query_string,
 
 void ApiClient::put(const std::string& query_string,
         const Json::Value& body,
-        std::shared_ptr<ResponseHandler> response_handler,
+        ResponseHandler response_handler,
         int timeout, const ApiHeaders *headers) {
 }
 
@@ -63,7 +64,7 @@ Json::Value ApiClient::del(const std::string& query_string,
 
 void ApiClient::del(const std::string& query_string,
         const Json::Value& body,
-        std::shared_ptr<ResponseHandler> response_handler,
+        ResponseHandler response_handler,
         int timeout, const ApiHeaders *headers) {
 }
 
@@ -75,7 +76,7 @@ Json::Value ApiClient::patch(const std::string& query_string,
 
 void ApiClient::patch(const std::string& query_string,
         const Json::Value& body,
-        std::shared_ptr<ResponseHandler> response_handler,
+        ResponseHandler response_handler,
         int timeout, const ApiHeaders *headers) {
 }
 

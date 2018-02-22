@@ -2,8 +2,8 @@
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
 
-#include "testing.h"
-#include "../utils.h"
+#include "api_client/test/testing.h"
+#include "api_client/utils.h"
 
 BOOST_AUTO_TEST_CASE(test_is_json_content_type_no_json) {
     std::pair<std::string, std::string> c1("other_header", "other_content");

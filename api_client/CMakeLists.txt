@@ -1,5 +1,5 @@
 file(GLOB Sources "*.cpp")
-file(GLOB Testing "test/*.cpp")
+file(GLOB Testing "test/*.cpp" "test/mocks/*.cpp")
 set(APICLIENT_HEADERS "apiclient/apiclient.h")
 
 add_library(api-client STATIC ${Sources})
@@ -22,6 +22,7 @@ target_link_libraries(apiclienttest
                       ${Boost_SYSTEM_LIBRARY}
                       ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
                       gcov
+                      ${CMAKE_THREAD_LIBS_INIT}
                       )
 
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -29,6 +30,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 SET_TARGET_PROPERTIES(api-client PROPERTIES LINKER_LANGUAGE C)
+set_target_properties(apiclienttest PROPERTIES COMPILE_DEFINITIONS "UNIT_TEST=1")
 
 install(TARGETS api-client
         ARCHIVE DESTINATION lib

@@ -4,8 +4,11 @@
 #ifndef API_CLIENT_ASIO_CLIENT_H_
 #define API_CLIENT_ASIO_CLIENT_H_
 
+#include <memory>
 #include <string>
-#include "apiclient/apiclient.h"
+#include "api_client/apiclient/apiclient.h"
+#include "api_client/asio-resolver.h"
+
 
 namespace apiclient {
 
@@ -16,35 +19,35 @@ class ApiClient: public ApiBase {
     Json::Value get(const std::string& query_string,
         int timeout = 0, const ApiHeaders *headers = NULL);
     void get(const std::string& query_string,
-        std::shared_ptr<ResponseHandler> response_handler,
+        ResponseHandler response_handler,
         int timeout = 0, const ApiHeaders *headers = NULL);
     Json::Value post(const std::string& query_string,
         const Json::Value& body,
         int timeout = 0, const ApiHeaders *headers = NULL);
     void post(const std::string& query_string,
         const Json::Value& body,
-        std::shared_ptr<ResponseHandler> response_handler,
+        ResponseHandler response_handler,
         int timeout = 0, const ApiHeaders *headers = NULL);
     Json::Value put(const std::string& query_string,
         const Json::Value& body,
         int timeout = 0, const ApiHeaders *headers = NULL);
     void put(const std::string& query_string,
         const Json::Value& body,
-        std::shared_ptr<ResponseHandler> response_handler,
+        ResponseHandler response_handler,
         int timeout = 0, const ApiHeaders *headers = NULL);
     Json::Value del(const std::string& query_string,
         const Json::Value& body,
         int timeout = 0, const ApiHeaders *headers = NULL);
     void del(const std::string& query_string,
         const Json::Value& body,
-        std::shared_ptr<ResponseHandler> response_handler,
+        ResponseHandler response_handler,
         int timeout = 0, const ApiHeaders *headers = NULL);
     Json::Value patch(const std::string& query_string,
         const Json::Value& body,
         int timeout = 0, const ApiHeaders *headers = NULL);
     void patch(const std::string& query_string,
         const Json::Value& body,
-        std::shared_ptr<ResponseHandler> response_handler,
+        ResponseHandler response_handler,
         int timeout = 0, const ApiHeaders *headers = NULL);
 
  private:
@@ -52,6 +55,7 @@ class ApiClient: public ApiBase {
     std::string host_;
     int port_;
     bool secure_;
+    std::shared_ptr<ResolverBase> resolver_;
 };
 
 }  // namespace apiclient

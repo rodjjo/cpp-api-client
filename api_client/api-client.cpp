@@ -2,8 +2,8 @@
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
 
-#include "apiclient/apiclient.h"
-#include "asio-client.h"
+#include "api_client/apiclient/apiclient.h"
+#include "api_client/asio-client.h"
 
 
 namespace apiclient {

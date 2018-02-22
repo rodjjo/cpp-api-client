@@ -4,7 +4,9 @@ set (CMAKE_CXX_STANDARD 11)
 
 project(ApiClient C CXX)
 
+find_package (Threads)
 find_package(Boost COMPONENTS system filesystem unit_test_framework REQUIRED)
+
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(JSONCPP jsoncpp)
 include_directories("${JSONCPP_INCLUDE_DIRS}")
@@ -12,11 +14,13 @@ link_libraries(${JSONCPP_LIBRARIES})
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake-modules)
 
-include_directories(ApiClient)
+include_directories(ApiClient ${PROJECT_SOURCE_DIR})
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/build/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/build/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/build/bin)
+
+# set(PLATFORM_SPECIFIC_LIBS "-lpthread")
 
 enable_testing()
 

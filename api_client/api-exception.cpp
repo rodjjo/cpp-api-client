@@ -2,7 +2,7 @@
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
 
-#include "api-exception.h"
+#include "api_client/api-exception.h"
 
 namespace apiclient {
 
