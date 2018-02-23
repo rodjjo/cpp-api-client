@@ -6,15 +6,36 @@
 
 #include <memory>
 #include <string>
+#include <thread>
+
+#ifdef UNIT_TEST
+#include "api_client/test/mocks/asio.hpp"
+#else
+#include <boost/asio.hpp>
+#endif
+
 #include "api_client/apiclient/apiclient.h"
 #include "api_client/asio-resolver.h"
 
 
 namespace apiclient {
 
+class ClientIo {
+ public:
+    ClientIo();
+    virtual ~ClientIo();
+
+    boost::asio::io_service io_service;
+
+ private:
+    std::shared_ptr<boost::asio::io_service::work> work_;
+    std::shared_ptr<std::thread> thread_;
+};
+
 class Client: public ClientBase {
  public:
-    explicit Client(const std::string& base_url);
+    explicit Client(std::shared_ptr<ClientIo> client_io,
+        const std::string& base_url);
     virtual ~Client();
     Response get(const std::string& query_string,
         int timeout = 0, const ApiHeaders *headers = NULL);
@@ -56,6 +77,7 @@ class Client: public ClientBase {
     int port_;
     bool secure_;
     std::shared_ptr<Resolver> resolver_;
+    std::shared_ptr<ClientIo> client_io_;
 };
 
 }  // namespace apiclient

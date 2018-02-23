@@ -13,6 +13,20 @@ namespace asio {
 
 class io_service {
  public:
+  class work {
+   public:
+    explicit work(const io_service &service) {
+    }
+  };
+
+  void reset() {
+  }
+
+  void run() {
+  }
+
+  void stop() {
+  }
 };
 
 namespace ip {

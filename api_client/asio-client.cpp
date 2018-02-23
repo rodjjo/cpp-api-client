@@ -8,7 +8,24 @@
 
 namespace apiclient {
 
-Client::Client(const std::string& base_url) : base_url_(base_url) {
+
+ClientIo::ClientIo() {
+    work_.reset(new boost::asio::io_service::work(io_service));
+    thread_.reset(new std::thread([this] () {
+        io_service.reset();
+        io_service.run();
+    }));
+}
+
+ClientIo::~ClientIo() {
+    work_.reset();
+    io_service.stop();
+    thread_->join();
+}
+
+
+Client::Client(std::shared_ptr<ClientIo> client_io,
+        const std::string& base_url) : base_url_(base_url) {
   url_fragments_t fragments = apiclient::decompose_url(base_url);
   if (!fragments.valid) {
     throw ApiException((std::string("Invalid url: ") + base_url).c_str());
@@ -16,7 +33,8 @@ Client::Client(const std::string& base_url) : base_url_(base_url) {
   secure_ = fragments.secure;
   host_ = fragments.host;
   port_ = fragments.port;
-  // resolver_.reset(new Resolver(...));
+  client_io_ = client_io;
+  resolver_.reset(new Resolver(&client_io_->io_service, host_, port_));
 }
 
 Client::~Client() {
