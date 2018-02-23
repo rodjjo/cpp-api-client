@@ -8,16 +8,14 @@
 #include "api_client/apiclient/apiclient.h"
 
 BOOST_AUTO_TEST_CASE(test_apiclient_build) {
-    auto client = apiclient::build("http://www.example.com/api/");
+  auto builder = apiclient::builder();
+  auto client = builder->client("http://www.example.com/api/");
 
-    BOOST_CHECK(client.get() != NULL);
+  BOOST_CHECK(client.get() != NULL);
 }
 
 BOOST_AUTO_TEST_CASE(test_apiclient_build_error) {
-  try {
-    auto client = apiclient::build("not a valid url");
-    BOOST_ASSERT_MSG(false, "Api Exception Expected");
-  } catch(const std::exception &e) {
-    BOOST_CHECK_EQUAL("Invalid url: not a valid url", e.what());
-  }
+  auto builder = apiclient::builder();
+  BOOST_CHECK_THROW(builder->client("this is not a valid url"),
+    std::exception);
 }

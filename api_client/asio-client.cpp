@@ -8,7 +8,7 @@
 
 namespace apiclient {
 
-ApiClient::ApiClient(const std::string& base_url) : base_url_(base_url) {
+Client::Client(const std::string& base_url) : base_url_(base_url) {
   url_fragments_t fragments = apiclient::decompose_url(base_url);
   if (!fragments.valid) {
     throw ApiException((std::string("Invalid url: ") + base_url).c_str());
@@ -19,62 +19,62 @@ ApiClient::ApiClient(const std::string& base_url) : base_url_(base_url) {
   // resolver_.reset(new Resolver(...));
 }
 
-ApiClient::~ApiClient() {
+Client::~Client() {
 }
 
-Json::Value ApiClient::get(const std::string& query_string,
+Response Client::get(const std::string& query_string,
         int timeout, const ApiHeaders *headers) {
-    return Json::Value();
+    return Response();
 }
 
-void ApiClient::get(const std::string& query_string,
+void Client::get(const std::string& query_string,
         ResponseHandler response_handler,
         int timeout, const ApiHeaders *headers) {
 }
 
-Json::Value ApiClient::post(const std::string& query_string,
+Response Client::post(const std::string& query_string,
         const Json::Value& body,
         int timeout, const ApiHeaders *headers) {
-    return Json::Value();
+    return Response();
 }
 
-void ApiClient::post(const std::string& query_string,
-        const Json::Value& body,
-        ResponseHandler response_handler,
-        int timeout, const ApiHeaders *headers) {
-}
-
-Json::Value ApiClient::put(const std::string& query_string,
-        const Json::Value& body,
-        int timeout, const ApiHeaders *headers) {
-    return Json::Value();
-}
-
-void ApiClient::put(const std::string& query_string,
+void Client::post(const std::string& query_string,
         const Json::Value& body,
         ResponseHandler response_handler,
         int timeout, const ApiHeaders *headers) {
 }
 
-Json::Value ApiClient::del(const std::string& query_string,
+Response Client::put(const std::string& query_string,
         const Json::Value& body,
         int timeout, const ApiHeaders *headers) {
-    return Json::Value();
+    return Response();
 }
 
-void ApiClient::del(const std::string& query_string,
+void Client::put(const std::string& query_string,
         const Json::Value& body,
         ResponseHandler response_handler,
         int timeout, const ApiHeaders *headers) {
 }
 
-Json::Value ApiClient::patch(const std::string& query_string,
+Response Client::del(const std::string& query_string,
         const Json::Value& body,
         int timeout, const ApiHeaders *headers) {
-    return Json::Value();
+    return Response();
 }
 
-void ApiClient::patch(const std::string& query_string,
+void Client::del(const std::string& query_string,
+        const Json::Value& body,
+        ResponseHandler response_handler,
+        int timeout, const ApiHeaders *headers) {
+}
+
+Response Client::patch(const std::string& query_string,
+        const Json::Value& body,
+        int timeout, const ApiHeaders *headers) {
+    return Response();
+}
+
+void Client::patch(const std::string& query_string,
         const Json::Value& body,
         ResponseHandler response_handler,
         int timeout, const ApiHeaders *headers) {

@@ -22,12 +22,8 @@ BOOST_AUTO_TEST_CASE(test_asio_resolver_except) {
   apiclient::Resolver resolver(&io_service, "google.com", 8080);
   boost::asio::ip::tcp::resolver::error_ = boost::system::errc::make_error_code(
                 boost::system::errc::bad_address);
-  try {
-    resolver.resolve();
-    BOOST_ASSERT_MSG(false, "Api Exception Expected");
-  } catch(const apiclient::ApiException &e) {
-    BOOST_CHECK_EQUAL("Fail resolving host: google.com", e.what());
-  }
+
+  BOOST_CHECK_THROW(resolver.resolve(), apiclient::ApiException);
 }
 
 BOOST_AUTO_TEST_CASE(test_asio_resolver_sync_resolve) {

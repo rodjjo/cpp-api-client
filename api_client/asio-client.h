@@ -12,37 +12,37 @@
 
 namespace apiclient {
 
-class ApiClient: public ApiBase {
+class Client: public ClientBase {
  public:
-    explicit ApiClient(const std::string& base_url);
-    virtual ~ApiClient();
-    Json::Value get(const std::string& query_string,
+    explicit Client(const std::string& base_url);
+    virtual ~Client();
+    Response get(const std::string& query_string,
         int timeout = 0, const ApiHeaders *headers = NULL);
     void get(const std::string& query_string,
         ResponseHandler response_handler,
         int timeout = 0, const ApiHeaders *headers = NULL);
-    Json::Value post(const std::string& query_string,
+    Response post(const std::string& query_string,
         const Json::Value& body,
         int timeout = 0, const ApiHeaders *headers = NULL);
     void post(const std::string& query_string,
         const Json::Value& body,
         ResponseHandler response_handler,
         int timeout = 0, const ApiHeaders *headers = NULL);
-    Json::Value put(const std::string& query_string,
+    Response put(const std::string& query_string,
         const Json::Value& body,
         int timeout = 0, const ApiHeaders *headers = NULL);
     void put(const std::string& query_string,
         const Json::Value& body,
         ResponseHandler response_handler,
         int timeout = 0, const ApiHeaders *headers = NULL);
-    Json::Value del(const std::string& query_string,
+    Response del(const std::string& query_string,
         const Json::Value& body,
         int timeout = 0, const ApiHeaders *headers = NULL);
     void del(const std::string& query_string,
         const Json::Value& body,
         ResponseHandler response_handler,
         int timeout = 0, const ApiHeaders *headers = NULL);
-    Json::Value patch(const std::string& query_string,
+    Response patch(const std::string& query_string,
         const Json::Value& body,
         int timeout = 0, const ApiHeaders *headers = NULL);
     void patch(const std::string& query_string,
