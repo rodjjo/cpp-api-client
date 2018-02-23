@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-/*
+
 #include "api_client/test/testing.h"
 #include "api_client/utils.h"
 
@@ -70,4 +70,3 @@ BOOST_AUTO_TEST_CASE(test_decompose_url_valid) {
     BOOST_CHECK_EQUAL(8080, url_frag5.port);
     BOOST_CHECK_EQUAL(9090, url_frag6.port);
 }
-*/
