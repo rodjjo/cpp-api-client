@@ -12,7 +12,7 @@ ApiBase::~ApiBase() {
 }
 
 std::shared_ptr<ApiBase> build(const std::string& base_url) {
-    return std::shared_ptr<ApiBase> ();
+    return std::shared_ptr<ApiBase> (new ApiClient(base_url));
 }
 
 

@@ -2,8 +2,6 @@
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
 
-#define BOOST_TEST_MAIN
-
 #include "api_client/test/testing.h"
 #include "api_client/api-exception.h"
 
