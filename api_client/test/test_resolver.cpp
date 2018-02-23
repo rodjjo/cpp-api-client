@@ -16,12 +16,14 @@ class Fixture {
 
 BOOST_FIXTURE_TEST_SUITE(resolver_test_suite, Fixture)
 
+
 BOOST_AUTO_TEST_CASE(test_asio_resolver_except) {
   boost::asio::io_service io_service;
-  auto resolver = apiclient::get_resolver(&io_service, "google.com", 8080);
-  boost::asio::ip::tcp::resolver::error_ = 10;
+  apiclient::Resolver resolver(&io_service, "google.com", 8080);
+  boost::asio::ip::tcp::resolver::error_ = boost::system::errc::make_error_code(
+                boost::system::errc::bad_address);
   try {
-    resolver->resolve();
+    resolver.resolve();
     BOOST_ASSERT_MSG(false, "Api Exception Expected");
   } catch(const apiclient::ApiException &e) {
     BOOST_CHECK_EQUAL("Fail resolving host: google.com", e.what());
@@ -30,13 +32,54 @@ BOOST_AUTO_TEST_CASE(test_asio_resolver_except) {
 
 BOOST_AUTO_TEST_CASE(test_asio_resolver_sync_resolve) {
   boost::asio::io_service io_service;
-  auto resolver = apiclient::get_resolver(&io_service, "google.com", 8080);
-  boost::asio::ip::tcp::resolver::error_ = 0;
-  resolver->resolve();
-  BOOST_CHECK_EQUAL(true, boost::asio::ip::tcp::resolver::resolve_called_);
+  apiclient::Resolver resolver(&io_service, "google.com", 8080);
+  boost::asio::ip::tcp::resolver::error_ = boost::system::errc::make_error_code(
+                boost::system::errc::success);
+  resolver.resolve();
+  BOOST_CHECK(boost::asio::ip::tcp::resolver::resolve_called_);
   boost::asio::ip::tcp::resolver::resolve_called_ = false;
-  resolver->resolve();
-  BOOST_CHECK_EQUAL(false, boost::asio::ip::tcp::resolver::resolve_called_);
+  resolver.resolve();
+  BOOST_CHECK(!boost::asio::ip::tcp::resolver::resolve_called_);
+}
+
+BOOST_AUTO_TEST_CASE(test_asio_resolver_assync_resolve_error) {
+  boost::asio::io_service io_service;
+  apiclient::Resolver resolver(&io_service, "google.com", 8080);
+  boost::asio::ip::tcp::resolver::error_ = boost::system::errc::make_error_code(
+      boost::system::errc::bad_address);
+
+  bool handler_called = false;
+  auto handler = [&handler_called](const boost::system::error_code& e,
+                    boost::asio::ip::tcp::resolver::iterator) {
+    handler_called = true;
+    BOOST_CHECK(e);
+  };
+  resolver.resolve(handler);
+  BOOST_CHECK(handler_called);
+  BOOST_CHECK(boost::asio::ip::tcp::resolver::async_resolve_called_);
+}
+
+BOOST_AUTO_TEST_CASE(test_asio_resolver_assync_resolve) {
+  boost::asio::io_service io_service;
+  apiclient::Resolver resolver(&io_service, "google.com", 8080);
+  boost::asio::ip::tcp::resolver::error_ = boost::system::errc::make_error_code(
+    boost::system::errc::success);
+
+  bool handler_called = false;
+  auto handler = [&handler_called](const boost::system::error_code& e,
+                    boost::asio::ip::tcp::resolver::iterator) {
+    handler_called = true;
+    BOOST_CHECK(!e);
+  };
+
+  resolver.resolve(handler);
+
+  BOOST_CHECK(handler_called);
+  BOOST_CHECK(boost::asio::ip::tcp::resolver::async_resolve_called_);
+
+  boost::asio::ip::tcp::resolver::async_resolve_called_ = false;
+  resolver.resolve(handler);
+  BOOST_CHECK(boost::asio::ip::tcp::resolver::async_resolve_called_);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

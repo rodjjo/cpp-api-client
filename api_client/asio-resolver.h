@@ -4,6 +4,7 @@
 #ifndef API_CLIENT_ASIO_RESOLVER_H_
 #define API_CLIENT_ASIO_RESOLVER_H_
 
+#include <atomic>
 #include <memory>
 #include <string>
 #include <functional>
@@ -19,18 +20,22 @@ namespace apiclient {
 typedef std::function<void(const boost::system::error_code&,
     boost::asio::ip::tcp::resolver::iterator)> ResolverHandler;
 
-class ResolverBase {
+class Resolver {
  public:
-    virtual ~ResolverBase();
-    virtual bool resolved() = 0;
-    virtual boost::asio::ip::tcp::resolver::iterator resolve() = 0;
-    virtual void resolve(ResolverHandler handler) = 0;
+    Resolver(boost::asio::io_service *io_service, const std::string& host,
+           int port);
+    virtual ~Resolver();
+    virtual boost::asio::ip::tcp::resolver::iterator resolve();
+    virtual void resolve(ResolverHandler handler);
+    virtual bool resolved();
+ private:
+    int port_;
+    std::string host_;
+    std::atomic_bool updating_;
+    std::atomic_bool updated_;
+    boost::asio::io_service *io_service_;
+    std::shared_ptr<boost::asio::ip::tcp::resolver::iterator> iterator_;
 };
-
-
-std::shared_ptr<ResolverBase> get_resolver(boost::asio::io_service *io_service,
-  const std::string& host, int port);
-
 
 }  // namespace apiclient
 

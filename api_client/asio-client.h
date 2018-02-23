@@ -55,7 +55,7 @@ class ApiClient: public ApiBase {
     std::string host_;
     int port_;
     bool secure_;
-    std::shared_ptr<ResolverBase> resolver_;
+    std::shared_ptr<Resolver> resolver_;
 };
 
 }  // namespace apiclient

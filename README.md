@@ -42,20 +42,20 @@ Coverage
 
 ```bash
 cmake -DCMAKE_BUILD_TYPE=Debug .
-make apiclient_coverage
+make coverage
 ```
 
 Show coverage report
 
 ```bash
 # you can replace firefox browser if you want to
-firefox apiclient_coverage/index.html
+firefox coverage/index.html
 ```
 
 Linting Checks
 
 ```bash
-make apiclient_lint
+make lint
 ```
 
 ## Colaborate

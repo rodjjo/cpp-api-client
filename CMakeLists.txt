@@ -38,4 +38,4 @@ file(GLOB LintSources
     "api_tool/*.cpp"
     "api_tool/*.h")
 
-add_style_check_target(apiclient_lint ${LintSources})
+add_style_check_target(lint ${LintSources})

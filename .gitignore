@@ -8,5 +8,5 @@ Makefile
 CMakeFiles/
 build/
 Testing/
-*_coverage/
-*_coverage.*
+*coverage/
+*coverage.*

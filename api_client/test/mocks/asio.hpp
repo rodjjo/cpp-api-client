@@ -6,41 +6,9 @@
 
 #include <string>
 #include <functional>
+#include <boost/system/error_code.hpp>
 
 namespace boost {
-
-namespace system {
-
-class error_code {
- public:
-    error_code() {
-      error_ = 0;
-    }
-
-    explicit error_code(int value) {
-      error_ = value;
-    }
-
-
-    error_code& operator=(int value) noexcept {
-      error_ = value;
-      return *this;
-    }
-
-    operator bool() {
-      return error_ != 0;
-    }
-
-    operator int() {
-      return error_;
-    }
-
- private:
-    int error_;
-};
-
-}  // namespace system
-
 namespace asio {
 
 class io_service {
@@ -75,10 +43,12 @@ class resolver {
   static iterator iterator_;
   static boost::system::error_code error_;
   static bool resolve_called_;
+  static bool async_resolve_called_;
 
   void async_resolve(const query& query,
     std::function<void(const boost::system::error_code error,
         iterator)> handler) {
+    async_resolve_called_ = true;
     handler(error_, iterator_);
   }
 

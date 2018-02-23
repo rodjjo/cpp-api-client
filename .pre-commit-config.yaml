@@ -4,7 +4,7 @@ repos:
       - id: cpplint
         name: cpplint check
         description: Checks the code style
-        entry: make apiclient_lint
+        entry: make lint
         language: system
         types: [text]
   - repo: https://github.com/pre-commit/pre-commit-hooks

@@ -16,7 +16,7 @@ ApiClient::ApiClient(const std::string& base_url) : base_url_(base_url) {
   secure_ = fragments.secure;
   host_ = fragments.host;
   port_ = fragments.port;
-
+  // resolver_.reset(new Resolver(...));
 }
 
 ApiClient::~ApiClient() {

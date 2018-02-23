@@ -1,31 +1,11 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#include <atomic>
 #include "api_client/asio-resolver.h"
 #include "api_client/api-exception.h"
 
 
 namespace apiclient {
-
-ResolverBase::~ResolverBase() {
-}
-
-class Resolver: public ResolverBase {
- public:
-  Resolver(boost::asio::io_service *io_service, const std::string& host,
-           int port);
-    virtual boost::asio::ip::tcp::resolver::iterator resolve();
-    virtual void resolve(ResolverHandler handler);
-    virtual bool resolved();
- private:
-    int port_;
-    std::string host_;
-    std::atomic_bool updating_;
-    std::atomic_bool updated_;
-    boost::asio::io_service *io_service_;
-    std::shared_ptr<boost::asio::ip::tcp::resolver::iterator> iterator_;
-};
 
 Resolver::Resolver(boost::asio::io_service *io_service,
     const std::string& host, int port) {
@@ -34,6 +14,9 @@ Resolver::Resolver(boost::asio::io_service *io_service,
   updating_ = false;
   updated_ = false;
   io_service_ = io_service;
+}
+
+Resolver::~Resolver() {
 }
 
 void Resolver::resolve(ResolverHandler handler) {
@@ -86,11 +69,5 @@ boost::asio::ip::tcp::resolver::iterator Resolver::resolve() {
 
   return *iter.get();
 }
-
-std::shared_ptr<ResolverBase> get_resolver(boost::asio::io_service *io_service,
-    const std::string& host, int port) {
-  return std::shared_ptr<ResolverBase>(new Resolver(io_service, host, port));
-}
-
 
 }  // namespace apiclient
