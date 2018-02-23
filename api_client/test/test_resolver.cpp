@@ -6,9 +6,17 @@
 #include "api_client/api-exception.h"
 #include "api_client/asio-resolver.h"
 
+class Fixture {
+ public:
+  Fixture() {
+    boost::reset_mocks();
+  }
+};
+
+
+BOOST_FIXTURE_TEST_SUITE(resolver_test_suite, Fixture)
 
 BOOST_AUTO_TEST_CASE(test_asio_resolver_except) {
-  boost::reset_mocks();
   boost::asio::io_service io_service;
   auto resolver = apiclient::get_resolver(&io_service, "google.com", 8080);
   boost::asio::ip::tcp::resolver::error_ = 10;
@@ -21,7 +29,6 @@ BOOST_AUTO_TEST_CASE(test_asio_resolver_except) {
 }
 
 BOOST_AUTO_TEST_CASE(test_asio_resolver_sync_resolve) {
-  boost::reset_mocks();
   boost::asio::io_service io_service;
   auto resolver = apiclient::get_resolver(&io_service, "google.com", 8080);
   boost::asio::ip::tcp::resolver::error_ = 0;
@@ -32,3 +39,4 @@ BOOST_AUTO_TEST_CASE(test_asio_resolver_sync_resolve) {
   BOOST_CHECK_EQUAL(false, boost::asio::ip::tcp::resolver::resolve_called_);
 }
 
+BOOST_AUTO_TEST_SUITE_END()
