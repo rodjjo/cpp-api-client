@@ -25,9 +25,9 @@ class Resolver {
     Resolver(boost::asio::io_service *io_service, const std::string& host,
            int port);
     virtual ~Resolver();
-    virtual boost::asio::ip::tcp::resolver::iterator resolve();
-    virtual void resolve(ResolverHandler handler);
-    virtual bool resolved();
+    void resolve(ResolverHandler handler);
+    bool resolved();
+    boost::asio::ip::tcp::resolver::iterator *get();
  private:
     int port_;
     std::string host_;

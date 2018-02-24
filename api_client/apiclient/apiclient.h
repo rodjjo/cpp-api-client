@@ -36,34 +36,20 @@ typedef std::function<void(const Response&,
 class ClientBase {
  public:
     virtual ~ClientBase();
-    virtual Response get(const std::string& query_string,
-        int timeout = 0, const ApiHeaders *headers = NULL) = 0;
     virtual void get(const std::string& query_string,
         ResponseHandler response_handler,
-        int timeout = 0, const ApiHeaders *headers = NULL) = 0;
-    virtual Response post(const std::string& query_string,
-        const Json::Value& body,
         int timeout = 0, const ApiHeaders *headers = NULL) = 0;
     virtual void post(const std::string& query_string,
         const Json::Value& body,
         ResponseHandler response_handler,
         int timeout = 0, const ApiHeaders *headers = NULL) = 0;
-    virtual Response put(const std::string& query_string,
-        const Json::Value& body,
-        int timeout = 0, const ApiHeaders *headers = NULL) = 0;
     virtual void put(const std::string& query_string,
         const Json::Value& body,
         ResponseHandler response_handler,
         int timeout = 0, const ApiHeaders *headers = NULL) = 0;
-    virtual Response del(const std::string& query_string,
-        const Json::Value& body,
-        int timeout = 0, const ApiHeaders *headers = NULL) = 0;
     virtual void del(const std::string& query_string,
         const Json::Value& body,
         ResponseHandler response_handler,
-        int timeout = 0, const ApiHeaders *headers = NULL) = 0;
-    virtual Response patch(const std::string& query_string,
-        const Json::Value& body,
         int timeout = 0, const ApiHeaders *headers = NULL) = 0;
     virtual void patch(const std::string& query_string,
         const Json::Value& body,

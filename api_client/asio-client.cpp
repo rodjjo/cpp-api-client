@@ -30,72 +30,81 @@ Client::Client(std::shared_ptr<ClientIo> client_io,
   if (!fragments.valid) {
     throw ApiException((std::string("Invalid url: ") + base_url).c_str());
   }
-  secure_ = fragments.secure;
   host_ = fragments.host;
   port_ = fragments.port;
   client_io_ = client_io;
   resolver_.reset(new Resolver(&client_io_->io_service, host_, port_));
+  if (fragments.secure) {
+    ssl_context_.reset(new boost::asio::ssl::context(
+                    boost::asio::ssl::context::tlsv12));
+    ssl_context_->set_default_verify_paths();
+  }
 }
 
 Client::~Client() {
 }
 
-Response Client::get(const std::string& query_string,
-        int timeout, const ApiHeaders *headers) {
-    return Response();
-}
-
 void Client::get(const std::string& query_string,
         ResponseHandler response_handler,
         int timeout, const ApiHeaders *headers) {
-}
-
-Response Client::post(const std::string& query_string,
-        const Json::Value& body,
-        int timeout, const ApiHeaders *headers) {
-    return Response();
+    request(http_get, query_string, NULL, response_handler, timeout, headers);
 }
 
 void Client::post(const std::string& query_string,
         const Json::Value& body,
         ResponseHandler response_handler,
         int timeout, const ApiHeaders *headers) {
-}
-
-Response Client::put(const std::string& query_string,
-        const Json::Value& body,
-        int timeout, const ApiHeaders *headers) {
-    return Response();
+    request(http_post, query_string, &body, response_handler, timeout, headers);
 }
 
 void Client::put(const std::string& query_string,
         const Json::Value& body,
         ResponseHandler response_handler,
         int timeout, const ApiHeaders *headers) {
-}
-
-Response Client::del(const std::string& query_string,
-        const Json::Value& body,
-        int timeout, const ApiHeaders *headers) {
-    return Response();
+    request(http_put, query_string, &body, response_handler, timeout, headers);
 }
 
 void Client::del(const std::string& query_string,
         const Json::Value& body,
         ResponseHandler response_handler,
         int timeout, const ApiHeaders *headers) {
-}
-
-Response Client::patch(const std::string& query_string,
-        const Json::Value& body,
-        int timeout, const ApiHeaders *headers) {
-    return Response();
+    request(http_delete, query_string, &body, response_handler, timeout,
+            headers);
 }
 
 void Client::patch(const std::string& query_string,
         const Json::Value& body,
         ResponseHandler response_handler,
         int timeout, const ApiHeaders *headers) {
+    request(http_patch, query_string, &body, response_handler, timeout,
+            headers);
+}
+
+void Client::resolve(resolver_function handler) {
+    if (resolver_->get()) {
+        auto success = boost::system::errc::success;
+        handler(boost::system::errc::make_error_code(success),
+            *resolver_->get());
+    } else {
+        resolver_->resolve([handler](const boost::system::error_code& error,
+            boost::asio::ip::tcp::resolver::iterator iterator) {
+        handler(error, iterator);
+    });
+    }
+}
+
+void Client::request(http_method_t method,
+        const std::string& query_string,
+        const Json::Value *body,
+        ResponseHandler response_handler,
+        int timeout = 0, const ApiHeaders *headers = NULL) {
+    std::shared_ptr<boost::asio::streambuf> message(
+        new boost::asio::streambuf());
+    compose_request(method, host_, query_string, headers, message.get());
+
+    if (ssl_context_) {
+    } else {
+    }
 }
 
 }  // namespace apiclient

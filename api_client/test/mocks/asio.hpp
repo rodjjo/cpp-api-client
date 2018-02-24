@@ -11,6 +11,23 @@
 namespace boost {
 namespace asio {
 
+namespace ssl {
+
+class context {
+ public:
+  typedef enum {
+    tlsv12 = 1
+  } version_t;
+
+  explicit context(version_t ver) {
+  }
+
+  void set_default_verify_paths() {
+  }
+};
+
+}
+
 class io_service {
  public:
   class work {

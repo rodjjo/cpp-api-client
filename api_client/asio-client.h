@@ -5,6 +5,7 @@
 #define API_CLIENT_ASIO_CLIENT_H_
 
 #include <memory>
+#include <functional>
 #include <string>
 #include <thread>
 
@@ -12,11 +13,12 @@
 #include "api_client/test/mocks/asio.hpp"
 #else
 #include <boost/asio.hpp>
+#include <boost/asio/ssl.hpp>
 #endif
 
 #include "api_client/apiclient/apiclient.h"
 #include "api_client/asio-resolver.h"
-
+#include "api_client/api-request.h"
 
 namespace apiclient {
 
@@ -32,42 +34,40 @@ class ClientIo {
     std::shared_ptr<std::thread> thread_;
 };
 
+
+typedef std::function<void(boost::system::error_code error,
+    boost::asio::ip::tcp::resolver::iterator)> resolver_function;
+
 class Client: public ClientBase {
  public:
     explicit Client(std::shared_ptr<ClientIo> client_io,
         const std::string& base_url);
     virtual ~Client();
-    Response get(const std::string& query_string,
-        int timeout = 0, const ApiHeaders *headers = NULL);
     void get(const std::string& query_string,
         ResponseHandler response_handler,
-        int timeout = 0, const ApiHeaders *headers = NULL);
-    Response post(const std::string& query_string,
-        const Json::Value& body,
-        int timeout = 0, const ApiHeaders *headers = NULL);
+        int timeout = 0, const ApiHeaders *headers = NULL) override;
     void post(const std::string& query_string,
         const Json::Value& body,
         ResponseHandler response_handler,
-        int timeout = 0, const ApiHeaders *headers = NULL);
-    Response put(const std::string& query_string,
-        const Json::Value& body,
-        int timeout = 0, const ApiHeaders *headers = NULL);
+        int timeout = 0, const ApiHeaders *headers = NULL) override;
     void put(const std::string& query_string,
         const Json::Value& body,
         ResponseHandler response_handler,
-        int timeout = 0, const ApiHeaders *headers = NULL);
-    Response del(const std::string& query_string,
-        const Json::Value& body,
-        int timeout = 0, const ApiHeaders *headers = NULL);
+        int timeout = 0, const ApiHeaders *headers = NULL) override;
     void del(const std::string& query_string,
         const Json::Value& body,
         ResponseHandler response_handler,
-        int timeout = 0, const ApiHeaders *headers = NULL);
-    Response patch(const std::string& query_string,
-        const Json::Value& body,
-        int timeout = 0, const ApiHeaders *headers = NULL);
+        int timeout = 0, const ApiHeaders *headers = NULL) override;
     void patch(const std::string& query_string,
         const Json::Value& body,
+        ResponseHandler response_handler,
+        int timeout = 0, const ApiHeaders *headers = NULL) override;
+
+ protected:
+    void resolve(resolver_function handler);
+    void request(http_method_t method,
+        const std::string& query_string,
+        const Json::Value* body,
         ResponseHandler response_handler,
         int timeout = 0, const ApiHeaders *headers = NULL);
 
@@ -75,7 +75,7 @@ class Client: public ClientBase {
     std::string base_url_;
     std::string host_;
     int port_;
-    bool secure_;
+    std::shared_ptr<boost::asio::ssl::context> ssl_context_;
     std::shared_ptr<Resolver> resolver_;
     std::shared_ptr<ClientIo> client_io_;
 };
