@@ -174,34 +174,11 @@ void Client::https_request(
 
     socket->set_verify_callback(verify_func);
 
-    auto handshake_handler = [
-        this, socket=std::move(ssl_socket), message=std::move(message), response_handler
-    ] (const boost::system::error_code& err) {
-        if (err) {
-            response_handler(apiclient::Response().with_error(err.value()));
-            return;
-        }
-
-        auto tcp_socket = static_cast<
-            boost::asio::ssl::stream<
-			boost::asio::ip::tcp::socket> *>(socket.get());
-
-        auto write_handler = [this, socket=std::move(socket), response_handler] (
-            const boost::system::error_code& err, std::size_t bytestransfered
-        ) {
-            if (err) {
-                response_handler(apiclient::Response().with_error(err.value()));
-                return;
-            }
-            // TODO(RODRIGO): implementar leitura de resposta
-        };
-
-        boost::asio::async_write(*tcp_socket, *message.get(), write_handler);
-    };
-
     auto connect_handler = [
-        handshake_handler=std::move(handshake_handler),
-        response_handler
+        this,
+        response_handler,
+        message=std::move(message),
+        socket=std::move(ssl_socket)
     ] (
         const boost::system::error_code& err,
         boost::asio::ip::tcp::resolver::iterator iterator
@@ -210,7 +187,37 @@ void Client::https_request(
             response_handler(apiclient::Response().with_error(err.value()));
             return;
         }
-        // tcp_socket->async_handshake(asio_ssl::stream_base::client, handshake_handler);
+
+        auto tcp_socket = static_cast<
+                boost::asio::ssl::stream<
+                boost::asio::ip::tcp::socket> *>(socket.get());
+
+        auto handshake_handler = [
+            this,
+            socket=std::move(socket),
+            message=std::move(message),
+            response_handler,
+            tcp_socket
+        ] (const boost::system::error_code& err) {
+            if (err) {
+                response_handler(apiclient::Response().with_error(err.value()));
+                return;
+            }
+
+            auto write_handler = [this, socket=std::move(socket), response_handler] (
+                const boost::system::error_code& err, std::size_t bytestransfered
+            ) {
+                if (err) {
+                    response_handler(apiclient::Response().with_error(err.value()));
+                    return;
+                }
+                // TODO(RODRIGO): implementar leitura de resposta
+            };
+
+            boost::asio::async_write(*tcp_socket, *message.get(), write_handler);
+        };
+
+        tcp_socket->async_handshake(asio_ssl::stream_base::client, handshake_handler);
     };
 
     boost::asio::async_connect(

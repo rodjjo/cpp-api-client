@@ -18,6 +18,14 @@ namespace asio {
 
 namespace ssl {
 
+class stream_base {
+  public:
+    enum handshake_type {
+      client,
+      server
+    };
+};
+
 enum {
   verify_none = 0,
 };
@@ -106,6 +114,8 @@ class resolver {
   }
 };
 
+typedef std::function<void(const boost::system::error_code& err)> HandshakeHandler;
+
 class socket {
  public:
   socket(boost::asio::io_service& io_service, boost::asio::ssl::context& context) {
@@ -115,6 +125,12 @@ class socket {
     return *this;
   }
 
+  void async_handshake(
+    boost::asio::ssl::stream_base::handshake_type type,
+    HandshakeHandler handshake_handler
+  ) {
+
+  }
 
   void set_verify_mode(boost::asio::ssl::verify_mode mode) {
   }
