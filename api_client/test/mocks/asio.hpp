@@ -5,6 +5,7 @@
 #define API_CLIENT_TEST_MOCKS_ASIO_HPP_
 
 #include <string>
+#include <sstream>
 #include <functional>
 #include <boost/system/error_code.hpp>
 
@@ -27,6 +28,9 @@ class context {
 };
 
 }
+
+typedef std::stringbuf streambuf;
+
 
 class io_service {
  public:

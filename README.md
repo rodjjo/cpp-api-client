@@ -14,7 +14,7 @@ Install the dependencies:
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y libboost1.58-all-dev libfltk1.3-dev libjsoncpp-dev
+sudo apt-get install -y libboost1.62-all-dev libfltk1.3-dev libjsoncpp-dev
 ```
 
 Install pre-commit

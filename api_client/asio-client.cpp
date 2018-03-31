@@ -97,7 +97,7 @@ void Client::request(http_method_t method,
         const std::string& query_string,
         const Json::Value *body,
         ResponseHandler response_handler,
-        int timeout = 0, const ApiHeaders *headers = NULL) {
+        int timeout, const ApiHeaders *headers) {
     std::shared_ptr<boost::asio::streambuf> message(
         new boost::asio::streambuf());
     compose_request(method, host_, query_string, headers, message.get());

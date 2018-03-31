@@ -17,27 +17,6 @@ class Fixture {
 BOOST_FIXTURE_TEST_SUITE(resolver_test_suite, Fixture)
 
 
-BOOST_AUTO_TEST_CASE(test_asio_resolver_except) {
-  boost::asio::io_service io_service;
-  apiclient::Resolver resolver(&io_service, "google.com", 8080);
-  boost::asio::ip::tcp::resolver::error_ = boost::system::errc::make_error_code(
-                boost::system::errc::bad_address);
-
-  BOOST_CHECK_THROW(resolver.resolve(), apiclient::ApiException);
-}
-
-BOOST_AUTO_TEST_CASE(test_asio_resolver_sync_resolve) {
-  boost::asio::io_service io_service;
-  apiclient::Resolver resolver(&io_service, "google.com", 8080);
-  boost::asio::ip::tcp::resolver::error_ = boost::system::errc::make_error_code(
-                boost::system::errc::success);
-  resolver.resolve();
-  BOOST_CHECK(boost::asio::ip::tcp::resolver::resolve_called_);
-  boost::asio::ip::tcp::resolver::resolve_called_ = false;
-  resolver.resolve();
-  BOOST_CHECK(!boost::asio::ip::tcp::resolver::resolve_called_);
-}
-
 BOOST_AUTO_TEST_CASE(test_asio_resolver_assync_resolve_error) {
   boost::asio::io_service io_service;
   apiclient::Resolver resolver(&io_service, "google.com", 8080);
