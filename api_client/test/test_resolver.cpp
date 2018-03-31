@@ -24,10 +24,12 @@ BOOST_AUTO_TEST_CASE(test_asio_resolver_assync_resolve_error) {
       boost::system::errc::bad_address);
 
   bool handler_called = false;
-  auto handler = [&handler_called](const boost::system::error_code& e,
+  auto handler = [&handler_called, &resolver](const boost::system::error_code& e,
                     boost::asio::ip::tcp::resolver::iterator) {
     handler_called = true;
-    BOOST_CHECK(e);
+    BOOST_CHECK(e == boost::asio::ip::tcp::resolver::error_);
+    BOOST_CHECK(!resolver.resolved());
+    BOOST_CHECK(resolver.get() == NULL);
   };
   resolver.resolve(handler);
   BOOST_CHECK(handler_called);
@@ -41,10 +43,12 @@ BOOST_AUTO_TEST_CASE(test_asio_resolver_assync_resolve) {
     boost::system::errc::success);
 
   bool handler_called = false;
-  auto handler = [&handler_called](const boost::system::error_code& e,
+  auto handler = [&handler_called, &resolver](const boost::system::error_code& e,
                     boost::asio::ip::tcp::resolver::iterator) {
     handler_called = true;
     BOOST_CHECK(!e);
+    BOOST_CHECK(resolver.resolved());
+    BOOST_CHECK(resolver.get() != NULL);
   };
 
   resolver.resolve(handler);

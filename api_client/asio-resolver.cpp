@@ -29,7 +29,7 @@ void Resolver::resolve(ResolverHandler handler) {
     query, [this, handler] (
         const boost::system::error_code& error,
         boost::asio::ip::tcp::resolver::iterator iterator) {
-      if (updating_.exchange(true) == false) {
+      if (!error && updating_.exchange(true) == false) {
         iterator_.reset(
           new boost::asio::ip::tcp::resolver::iterator(iterator));
         updated_ = true;
