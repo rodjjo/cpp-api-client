@@ -174,34 +174,49 @@ void Client::https_request(
 
     socket->set_verify_callback(verify_func);
 
-    auto write = [
-        this, socket=std::move(ssl_socket), message=std::move(message)
+    auto handshake_handler = [
+        this, socket=std::move(ssl_socket), message=std::move(message), response_handler
     ] (const boost::system::error_code& err) {
-        // TODO(RODRIGO): tratar err
+        if (err) {
+            response_handler(apiclient::Response().with_error(err.value()));
+            return;
+        }
 
         auto tcp_socket = static_cast<
-            const boost::asio::ssl::stream<
+            boost::asio::ssl::stream<
 			boost::asio::ip::tcp::socket> *>(socket.get());
 
-        auto read = [this, socket=std::move(socket)] (
-            const boost::system::error_code& err
+        auto write_handler = [this, socket=std::move(socket), response_handler] (
+            const boost::system::error_code& err, std::size_t bytestransfered
         ) {
-            // TODO(RODRIGO): tratar err
+            if (err) {
+                response_handler(apiclient::Response().with_error(err.value()));
+                return;
+            }
             // TODO(RODRIGO): implementar leitura de resposta
         };
 
-        // boost::asio::async_write(*tcp_socket, message, read);
+        boost::asio::async_write(*tcp_socket, *message.get(), write_handler);
+    };
+
+    auto connect_handler = [
+        handshake_handler=std::move(handshake_handler),
+        response_handler
+    ] (
+        const boost::system::error_code& err,
+        boost::asio::ip::tcp::resolver::iterator iterator
+    ) {
+        if (err) {
+            response_handler(apiclient::Response().with_error(err.value()));
+            return;
+        }
+        // tcp_socket->async_handshake(asio_ssl::stream_base::client, handshake_handler);
     };
 
     boost::asio::async_connect(
         socket->lowest_layer(),
         *resolver_->get(),
-        [write=std::move(write)] (
-            const boost::system::error_code& ec,
-            boost::asio::ip::tcp::resolver::iterator iterator
-        ) {
-            // tcp_socket->async_handshake(asio_ssl::stream_base::client, write);
-        }
+        connect_handler
     );
 }
 

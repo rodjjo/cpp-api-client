@@ -21,6 +21,8 @@ class Response {
     Response();
     virtual ~Response();
 
+    Response& with_error(int error);
+
  public:
     int status;
     int error;
@@ -29,8 +31,7 @@ class Response {
 };
 
 
-typedef std::function<void(const Response&,
-                           const ApiHeaders&)> ResponseHandler;
+typedef std::function<void(const Response&)> ResponseHandler;
 
 
 class ClientBase {

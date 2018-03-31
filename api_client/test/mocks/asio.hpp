@@ -136,10 +136,17 @@ typedef std::function<void(
     boost::asio::ip::tcp::resolver::iterator
   )> ComposedConnectHandler;
 
+typedef std::function<void(
+  const boost::system::error_code&, std::size_t
+)> WriteHandler;
+
 void async_connect(boost::asio::ip::tcp::socket& s,
     boost::asio::ip::tcp::resolver::iterator begin,
     ComposedConnectHandler handler);
 
+void async_write(boost::asio::ip::tcp::socket& s,
+    boost::asio::streambuf &buffer,
+    WriteHandler handler);
 
 namespace ssl {
 

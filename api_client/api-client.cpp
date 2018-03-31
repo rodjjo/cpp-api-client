@@ -16,6 +16,11 @@ Response::Response() {
     status = 0;
 }
 
+Response& Response::with_error(int value) {
+    error = value;
+    return *this;
+}
+
 Response::~Response() {
 }
 

@@ -34,5 +34,12 @@ void async_connect(
 
 }
 
+void async_write(boost::asio::ip::tcp::socket& s,
+    boost::asio::streambuf &buffer,
+    WriteHandler handler) {
+
+}
+
+
 }  // namespace asio
 }  // namespace asio
