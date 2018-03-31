@@ -8,11 +8,25 @@
 #include <sstream>
 #include <functional>
 #include <boost/system/error_code.hpp>
+#include <boost/asio/streambuf.hpp>
+
+
+typedef int SSL;
 
 namespace boost {
 namespace asio {
 
 namespace ssl {
+
+enum {
+  verify_none = 0,
+};
+
+typedef int verify_mode;
+
+class verify_context {
+  public:
+};
 
 class context {
  public:
@@ -23,14 +37,12 @@ class context {
   explicit context(version_t ver) {
   }
 
+
   void set_default_verify_paths() {
   }
 };
 
 }
-
-typedef std::stringbuf streambuf;
-
 
 class io_service {
  public:
@@ -94,13 +106,59 @@ class resolver {
   }
 };
 
+class socket {
+ public:
+  socket(boost::asio::io_service& io_service, boost::asio::ssl::context& context) {
+  }
+
+  socket& lowest_layer() {
+    return *this;
+  }
+
+
+  void set_verify_mode(boost::asio::ssl::verify_mode mode) {
+  }
+
+  void set_verify_callback(std::function<bool(bool, boost::asio::ssl::verify_context&)> clb) {
+  }
+
+  SSL* native_handle() {
+    return (SSL*) 0;
+  }
+};
+
 }  // namespace tcp
 }  // namespace ip
+
+
+typedef std::function<void(
+    const boost::system::error_code&,
+    boost::asio::ip::tcp::resolver::iterator
+  )> ComposedConnectHandler;
+
+void async_connect(boost::asio::ip::tcp::socket& s,
+    boost::asio::ip::tcp::resolver::iterator begin,
+    ComposedConnectHandler handler);
+
+
+namespace ssl {
+
+template<typename sock_type>
+class stream: public boost::asio::ip::tcp::socket {
+  public:
+    stream(boost::asio::io_service& io_service, boost::asio::ssl::context& context): socket(io_service, context) {
+    }
+
+};
+
+}
 }  // namespace asio
 
 void reset_mocks();
 
 }  // namespace boost
+
+void SSL_set_tlsext_host_name(SSL* handle, const char *hosts);
 
 #endif  // API_CLIENT_TEST_MOCKS_ASIO_HPP_
 

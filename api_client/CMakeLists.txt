@@ -21,6 +21,7 @@ target_link_libraries(apiclienttest
                       ${Boost_FILESYSTEM_LIBRARY}
                       ${Boost_SYSTEM_LIBRARY}
                       ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
+                      ${Boost_THREAD_LIBRARY}
                       gcov
                       ${CMAKE_THREAD_LIBS_INIT}
                       )

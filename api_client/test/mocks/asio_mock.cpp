@@ -19,3 +19,20 @@ void boost::reset_mocks() {
     boost::asio::ip::tcp::resolver::resolve_called_ = false;
     boost::asio::ip::tcp::resolver::async_resolve_called_ = false;
 }
+
+
+void SSL_set_tlsext_host_name(SSL* handle, const char *hosts) {
+}
+
+namespace boost {
+namespace asio {
+
+void async_connect(
+    boost::asio::ip::tcp::socket& s,
+    boost::asio::ip::tcp::resolver::iterator begin,
+    ComposedConnectHandler handler) {
+
+}
+
+}  // namespace asio
+}  // namespace asio
