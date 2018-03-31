@@ -30,12 +30,13 @@ add_subdirectory("api_client")
 add_subdirectory("api_tool")
 
 file(GLOB LintSources
-    "api_client/*.cpp"
     "api_client/*.h"
+    "api_client/*.cpp"
     "api_client/apiclient/*.h"
     "api_client/test/*.h"
     "api_client/test/*.cpp"
     "api_tool/*.cpp"
     "api_tool/*.h")
 
-add_style_check_target(lint ${LintSources})
+
+add_style_check_target(lint "${LintSources}")

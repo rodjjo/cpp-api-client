@@ -7,7 +7,7 @@
 #include <memory>
 #include <functional>
 #include <string>
-#include <thread>
+#include <boost/thread.hpp>
 
 #ifdef UNIT_TEST
 #include "api_client/test/mocks/asio.hpp"
@@ -31,7 +31,7 @@ class ClientIo {
 
  private:
     std::shared_ptr<boost::asio::io_service::work> work_;
-    std::shared_ptr<std::thread> thread_;
+    std::shared_ptr<boost::thread> thread_;
 };
 
 

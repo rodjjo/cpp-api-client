@@ -11,7 +11,7 @@ namespace apiclient {
 
 ClientIo::ClientIo() {
     work_.reset(new boost::asio::io_service::work(io_service));
-    thread_.reset(new std::thread([this] () {
+    thread_.reset(new boost::thread([this] () {
         io_service.reset();
         io_service.run();
     }));
