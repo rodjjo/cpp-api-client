@@ -36,7 +36,7 @@ typedef std::function<void (
 
 class HTTPSClient: public ProtocolClientBase {
  public:
-    explicit HTTPSClient(std::shared_ptr<ClientIo> client_io,
+    HTTPSClient(std::shared_ptr<ClientIo> client_io,
         url_fragments_t url_fragments,
         asio_ssl::verify_mode ssl_verify_mode);
     virtual ~HTTPSClient();
@@ -60,8 +60,6 @@ class HTTPSClient: public ProtocolClientBase {
         sslsocket_t ssl_socket,
         ResponseHandler response_handler
     );
-
-    void delivery_response(std::stringstream& data, ResponseHandler response_handler, DeliveryHandler handler);
 
     void request(std::shared_ptr<boost::asio::streambuf> message,
         ResponseHandler response_handler,

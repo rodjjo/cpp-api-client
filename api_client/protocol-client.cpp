@@ -5,6 +5,7 @@
 #include "api_client/api-exception.h"
 #include "api_client/protocol-client.h"
 #include "api_client/https-client.h"
+#include "api_client/http-client.h"
 
 
 namespace apiclient {
@@ -61,6 +62,18 @@ boost::asio::io_service& ProtocolClientBase::get_io_service() {
 }
 
 
+void ProtocolClientBase::delivery_response(
+    std::stringstream& data,
+    ResponseHandler response_handler,
+    DeliveryHandler handler) {
+
+    response_handler(Response()); // TODO(RODRIGO): write response
+
+    handler();
+}
+
+
+
 Client::Client(std::shared_ptr<ClientIo> client_io,
     const std::string& base_url, asio_ssl::verify_mode ssl_verify_mode) {
   url_fragments_t fragments = apiclient::decompose_url(base_url);
@@ -69,13 +82,9 @@ Client::Client(std::shared_ptr<ClientIo> client_io,
   }
 
   if (fragments.secure) {
-    client_.reset(new HTTPSClient(
-        client_io, fragments, ssl_verify_mode
-    ));
+    client_.reset(new HTTPSClient(client_io, fragments, ssl_verify_mode));
   } else {
-    client_.reset(
-
-    );
+    client_.reset(new HTTPClient(client_io, fragments));
   }
 }
 

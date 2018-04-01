@@ -21,6 +21,35 @@ HTTPSClient::HTTPSClient(std::shared_ptr<ClientIo> client_io,
 HTTPSClient::~HTTPSClient() {
 }
 
+void HTTPSClient::make_request(
+    std::shared_ptr<boost::asio::streambuf> message,
+    ResponseHandler response_handler,
+    int timeout
+) {
+    auto handle_build_socket = [this, message, response_handler, timeout] (
+        sslsocket_t ssl_socket
+    ) {
+        auto handle_connect = [this, ssl_socket, message, response_handler, timeout] (
+            const boost::system::error_code& err,
+            boost::asio::ip::tcp::resolver::iterator iterator
+        ) {
+            if (err) {
+                response_handler(apiclient::Response().with_error(err.value()));
+                return;
+            }
+            process_request(ssl_socket, message, response_handler);
+        };
+
+        boost::asio::async_connect(
+            static_cast<streamsocket_t *>(ssl_socket.get())->lowest_layer(),
+            get_resolver_iterator(),
+            handle_connect
+        );
+    };
+
+    build_ssl_socket(handle_build_socket);
+}
+
 bool HTTPSClient::verify_certificate(bool preverified, asio_ssl::verify_context& ctx) {
     return preverified;
 }
@@ -42,17 +71,6 @@ void HTTPSClient::build_ssl_socket(BuildSocketHandler handler) {
     SSL_set_tlsext_host_name(socket->native_handle(), get_host().c_str());
 
     handler(ssl_socket);
-}
-
-
-void HTTPSClient::delivery_response(
-    std::stringstream& data,
-    ResponseHandler response_handler,
-    DeliveryHandler handler) {
-
-    response_handler(Response()); // TODO(RODRIGO): write response
-
-    handler();
 }
 
 void HTTPSClient::process_response(
@@ -142,35 +160,6 @@ void HTTPSClient::process_request(
             );
         }
     );
-}
-
-void HTTPSClient::make_request(
-    std::shared_ptr<boost::asio::streambuf> message,
-    ResponseHandler response_handler,
-    int timeout
-) {
-    auto handle_build_socket = [this, message, response_handler, timeout] (
-        sslsocket_t ssl_socket
-    ) {
-        auto handle_connect = [this, ssl_socket, message, response_handler, timeout] (
-            const boost::system::error_code& err,
-            boost::asio::ip::tcp::resolver::iterator iterator
-        ) {
-            if (err) {
-                response_handler(apiclient::Response().with_error(err.value()));
-                return;
-            }
-            process_request(ssl_socket, message, response_handler);
-        };
-
-        boost::asio::async_connect(
-            static_cast<streamsocket_t *>(ssl_socket.get())->lowest_layer(),
-            get_resolver_iterator(),
-            handle_connect
-        );
-    };
-
-    build_ssl_socket(handle_build_socket);
 }
 
 }  // namespace apiclient

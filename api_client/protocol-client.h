@@ -60,6 +60,7 @@ class ProtocolClientBase {
     const std::string& get_host();
     boost::asio::ip::tcp::resolver::iterator& get_resolver_iterator();
     boost::asio::io_service& get_io_service();
+    void delivery_response(std::stringstream& data, ResponseHandler response_handler, DeliveryHandler handler);
   private:
     std::shared_ptr<Resolver> resolver_;
     std::shared_ptr<ClientIo> client_io_;
