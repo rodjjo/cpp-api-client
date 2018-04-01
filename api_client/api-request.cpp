@@ -49,18 +49,13 @@ void compose_request(http_method_t method,
                     const std::string& host,
                     const std::string &query,
                     const ApiHeaders *headers,
-                    boost::asio::streambuf *message) {
-    compose_request(method, host, query, headers, std::string(), message);
-}
-
-void compose_request(http_method_t method,
-                    const std::string& host,
-                    const std::string &query,
-                    const ApiHeaders *headers,
-                    const Json::Value &body,
+                    const Json::Value *body,
                     boost::asio::streambuf *message) {
     Json::FastWriter writer;
-    compose_request(method, host, query, headers, writer.write(body), message);
+    compose_request(
+        method, host, query,  headers,
+        body ? writer.write(*body) : std::string(), message
+    );
 }
 
 }  // namespace apiclient

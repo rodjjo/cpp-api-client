@@ -122,12 +122,8 @@ std::shared_ptr<boost::asio::streambuf> Client::get_message(
     const ApiHeaders *headers
 ) {
     auto message = std::shared_ptr<boost::asio::streambuf>(new boost::asio::streambuf());
-    // TODO(RODRIGO): fazer compose_request ser somente 1 função
-    if (body) {
-        compose_request(method, host_, query_string, headers, *body, message.get());
-    } else {
-        compose_request(method, host_, query_string, headers, message.get());
-    }
+
+    compose_request(method, host_, query_string, headers, body, message.get());
 
     return message;
 }
