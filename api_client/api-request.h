@@ -27,7 +27,7 @@ void compose_request(http_method_t method,
                     const std::string& host,
                     const std::string &query,
                     const ApiHeaders *headers,
-                    const Json::Value *body,
+                    const Json::Value *data,
                     boost::asio::streambuf *message);
 
 

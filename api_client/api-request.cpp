@@ -18,8 +18,10 @@ void compose_request(http_method_t method,
                     const std::string& host,
                     const std::string &query,
                     const ApiHeaders *headers,
-                    const std::string& body,
+                    const Json::Value *data,
                     boost::asio::streambuf *message) {
+    std::string body(data ? Json::FastWriter().write(data): "");
+
     std::ostream output(message);
     output << METHODS[method] << " " << query << " HTTP/1.0\r\n";
     output << "Host: " << host << "\r\n";
@@ -43,19 +45,6 @@ void compose_request(http_method_t method,
     if (method != http_get) {
         output << body;
     }
-}
-
-void compose_request(http_method_t method,
-                    const std::string& host,
-                    const std::string &query,
-                    const ApiHeaders *headers,
-                    const Json::Value *body,
-                    boost::asio::streambuf *message) {
-    Json::FastWriter writer;
-    compose_request(
-        method, host, query,  headers,
-        body ? writer.write(*body) : std::string(), message
-    );
 }
 
 }  // namespace apiclient
