@@ -19,20 +19,30 @@ typedef std::map<std::string, std::string> ApiHeaders;
 class Response {
  public:
     Response();
+    explicit Response(int error);
+    Response(int status, const std::string& data);
     virtual ~Response();
+    int get_status();
+    int get_error();
+    bool has_error();
+    bool is_json();
+    const Json::Value& get_body();
+    const std::string& get_data();
+ private:
+    void parse_json();
+ private:
+    int status_;
+    int error_;
+    bool is_json_;
+    bool has_error_;
+    bool parsed_;
 
-    Response& with_error(int error);
-
- public:
-    int status;
-    int error;
-    ApiHeaders headers;
-    Json::Value body;
+    ApiHeaders headers_;
+    std::string data_;
+    Json::Value body_;
 };
 
-
 typedef std::function<void(const Response&)> ResponseHandler;
-
 
 class ClientBase {
  public:

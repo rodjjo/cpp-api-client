@@ -11,20 +11,6 @@ namespace apiclient {
 ClientBase::~ClientBase() {
 }
 
-Response::Response() {
-    error = 0;
-    status = 0;
-}
-
-Response& Response::with_error(int value) {
-    error = value;
-    return *this;
-}
-
-Response::~Response() {
-}
-
-
 ClientBuilderBase::~ClientBuilderBase() {
 }
 

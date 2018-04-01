@@ -34,7 +34,7 @@ void HTTPSClient::make_request(
             boost::asio::ip::tcp::resolver::iterator iterator
         ) {
             if (err) {
-                response_handler(apiclient::Response().with_error(err.value()));
+                response_handler(apiclient::Response(err.value()));
                 return;
             }
             process_request(ssl_socket, message, response_handler);
@@ -104,7 +104,7 @@ void HTTPSClient::process_response(
 				tcp_socket->lowest_layer().close();
             });
         } else if (err) {
-            response_handler(apiclient::Response().with_error(err.value()));
+            response_handler(apiclient::Response(err.value()));
         } else {
             if (bytestransfered) {
                 (*data.get()) << &(*buffer.get());
@@ -137,7 +137,7 @@ void HTTPSClient::process_request(
             response_handler
         ] (const boost::system::error_code& err) {
             if (err) {
-                response_handler(apiclient::Response().with_error(err.value()));
+                response_handler(apiclient::Response(err.value()));
                 return;
             }
 
@@ -151,7 +151,7 @@ void HTTPSClient::process_request(
                     const boost::system::error_code& err, std::size_t bytestransfered
                 ) {
                     if (err) {
-                        response_handler(apiclient::Response().with_error(err.value()));
+                        response_handler(apiclient::Response(err.value()));
                         return;
                     }
 
