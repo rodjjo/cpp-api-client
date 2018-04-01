@@ -19,6 +19,15 @@ Resolver::Resolver(boost::asio::io_service *io_service,
 Resolver::~Resolver() {
 }
 
+int Resolver::get_port() {
+  return port_;
+}
+
+const std::string& Resolver::get_host() {
+  return host_;
+}
+
+
 void Resolver::resolve(ResolverHandler handler) {
   char port[20] = "";
   snprintf(port, sizeof(port) - 1, "%d", port_);

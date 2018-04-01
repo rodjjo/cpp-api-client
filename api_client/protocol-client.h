@@ -39,17 +39,6 @@ class ClientIo {
 typedef std::function<void(boost::system::error_code error,
     boost::asio::ip::tcp::resolver::iterator)> resolver_function;
 
-
-typedef std::shared_ptr<
-            boost::asio::ssl::stream<boost::asio::ip::tcp::socket>
-        >  sslsocket_t;
-
-typedef boost::asio::ssl::stream<boost::asio::ip::tcp::socket> streamsocket_t;
-
-typedef std::function<void (
-        sslsocket_t ssl_socket
-    )> BuildSocketHandler;
-
 typedef std::function<void(
         const boost::system::error_code& err,
         boost::asio::ip::tcp::resolver::iterator iterator
@@ -57,11 +46,31 @@ typedef std::function<void(
 
 typedef std::function<void()> DeliveryHandler;
 
+
+class ProtocolClientBase {
+  public:
+      ProtocolClientBase(std::shared_ptr<ClientIo> client_io, const std::string& host, int port);
+
+    virtual ~ProtocolClientBase();
+    virtual void make_request(
+        std::shared_ptr<boost::asio::streambuf> message,
+        ResponseHandler response_handler,
+        int timeout) = 0;
+    void resolve(resolver_function handler);
+    const std::string& get_host();
+    boost::asio::ip::tcp::resolver::iterator& get_resolver_iterator();
+    boost::asio::io_service& get_io_service();
+  private:
+    std::shared_ptr<Resolver> resolver_;
+    std::shared_ptr<ClientIo> client_io_;
+
+};
+
 namespace asio_ssl = boost::asio::ssl;
 
 class Client: public ClientBase {
  public:
-    explicit Client(std::shared_ptr<ClientIo> client_io,
+    Client(std::shared_ptr<ClientIo> client_io,
         const std::string& base_url,
         asio_ssl::verify_mode ssl_verify_mode = asio_ssl::verify_none);
     virtual ~Client();
@@ -84,51 +93,15 @@ class Client: public ClientBase {
         const Json::Value& body,
         ResponseHandler response_handler,
         int timeout = 0, const ApiHeaders *headers = NULL) override;
-
- protected:
-    void resolve(resolver_function handler);
-    bool verify_certificate(bool preverified, asio_ssl::verify_context& ctx);
-
+ private:
+    const std::string& get_host();
     std::shared_ptr<boost::asio::streambuf> get_message(
         http_method_t method,
         const std::string& query_string,
         const Json::Value* body,
         const ApiHeaders *headers = NULL);
 
-    void https_request(
-        std::shared_ptr<boost::asio::streambuf> message,
-        ResponseHandler response_handler,
-        int timeout);
-
-    void http_request(
-        std::shared_ptr<boost::asio::streambuf> message,
-        ResponseHandler response_handler,
-        int timeout);
-
-    void build_ssl_socket(BuildSocketHandler handler);
-
-    void process_https_request(
-        sslsocket_t ssl_socket,
-        std::shared_ptr<boost::asio::streambuf> message,
-        ResponseHandler response_handler);
-    void process_https_response(
-        sslsocket_t ssl_socket,
-        ResponseHandler response_handler
-    );
-
-    void delivery_response(std::stringstream& data, ResponseHandler response_handler, DeliveryHandler handler);
-
-    void request(std::shared_ptr<boost::asio::streambuf> message,
-        ResponseHandler response_handler,
-        int timeout = 0);
- private:
-    std::string base_url_;
-    std::string host_;
-    int port_;
-    asio_ssl::verify_mode ssl_verify_mode_;
-    std::shared_ptr<boost::asio::ssl::context> ssl_context_;
-    std::shared_ptr<Resolver> resolver_;
-    std::shared_ptr<ClientIo> client_io_;
+    std::shared_ptr<ProtocolClientBase> client_;
 };
 
 }  // namespace apiclient

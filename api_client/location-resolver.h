@@ -28,9 +28,11 @@ class Resolver {
     void resolve(ResolverHandler handler);
     bool resolved();
     boost::asio::ip::tcp::resolver::iterator *get();
+    int get_port();
+    const std::string& get_host();
  private:
-    int port_;
     std::string host_;
+    int port_;
     std::atomic_bool updating_;
     std::atomic_bool updated_;
     boost::asio::io_service *io_service_;
