@@ -10,6 +10,7 @@
 #include <boost/system/error_code.hpp>
 #include <boost/asio/streambuf.hpp>
 
+#define ERROR_VALUE_SSL_SHORT_READ 1000
 
 typedef int SSL;
 
@@ -51,6 +52,18 @@ class context {
 };
 
 }
+
+namespace error {
+
+enum misc_errors
+{
+  already_open = 1,
+  eof
+};
+
+const boost::system::error_category & get_ssl_category();
+
+}  // namespace error
 
 class io_service {
  public:
@@ -123,6 +136,12 @@ class socket {
 
   socket& lowest_layer() {
     return *this;
+  }
+
+  void shutdown() {
+  }
+
+  void close() {
   }
 
   void async_handshake(

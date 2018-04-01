@@ -14,6 +14,7 @@
 #else
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
+#define ERROR_VALUE_SSL_SHORT_READ ERR_PACK(ERR_LIB_SSL, 0, SSL_R_SHORT_READ)
 #endif
 
 #include "api_client/apiclient/apiclient.h"
@@ -37,6 +38,24 @@ class ClientIo {
 
 typedef std::function<void(boost::system::error_code error,
     boost::asio::ip::tcp::resolver::iterator)> resolver_function;
+
+
+typedef std::shared_ptr<
+            boost::asio::ssl::stream<boost::asio::ip::tcp::socket>
+        >  sslsocket_t;
+
+typedef boost::asio::ssl::stream<boost::asio::ip::tcp::socket> streamsocket_t;
+
+typedef std::function<void (
+        sslsocket_t ssl_socket
+    )> BuildSocketHandler;
+
+typedef std::function<void(
+        const boost::system::error_code& err,
+        boost::asio::ip::tcp::resolver::iterator iterator
+    )>  ConnectHandler;
+
+typedef std::function<void()> DeliveryHandler;
 
 namespace asio_ssl = boost::asio::ssl;
 
@@ -85,6 +104,19 @@ class Client: public ClientBase {
         std::shared_ptr<boost::asio::streambuf> message,
         ResponseHandler response_handler,
         int timeout);
+
+    void build_ssl_socket(BuildSocketHandler handler);
+    void ssl_connect(streamsocket_t *socket, ConnectHandler handler);
+    void process_ssl_request(
+        sslsocket_t ssl_socket,
+        std::shared_ptr<boost::asio::streambuf> message,
+        ResponseHandler response_handler);
+    void process_ssl_response(
+        sslsocket_t ssl_socket,
+        ResponseHandler response_handler
+    );
+
+    void delivery_response(std::stringstream& data, ResponseHandler response_handler, DeliveryHandler handler);
 
     void request(std::shared_ptr<boost::asio::streambuf> message,
         ResponseHandler response_handler,

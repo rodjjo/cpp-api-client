@@ -41,5 +41,31 @@ void async_write(boost::asio::ip::tcp::socket& s,
 }
 
 
+namespace error {
+
+namespace detail {
+
+class ssl_category : public boost::system::error_category
+{
+public:
+  const char* name() const BOOST_ASIO_ERROR_CATEGORY_NOEXCEPT
+  {
+    return "asio.ssl";
+  }
+
+  std::string message(int value) const
+  {
+    return "asio.ssl error";
+  }
+};
+
+}  // namespace detail
+
+const boost::system::error_category & get_ssl_category() {
+  static detail::ssl_category instance;
+  return instance;
+}
+
+}  // namespace error
 }  // namespace asio
-}  // namespace asio
+}  // namespace boost
