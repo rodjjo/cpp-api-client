@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef API_CLIENT_ASIO_RESOLVER_H_
-#define API_CLIENT_ASIO_RESOLVER_H_
+#ifndef API_CLIENT_LOCATION_RESOLVER_H_
+#define API_CLIENT_LOCATION_RESOLVER_H_
 
 #include <atomic>
 #include <memory>
@@ -39,4 +39,4 @@ class Resolver {
 
 }  // namespace apiclient
 
-#endif  // API_CLIENT_ASIO_RESOLVER_H_
+#endif  // API_CLIENT_LOCATION_RESOLVER_H_

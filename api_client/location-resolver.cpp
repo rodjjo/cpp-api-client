@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#include "api_client/asio-resolver.h"
+#include "api_client/location-resolver.h"
 #include "api_client/api-exception.h"
 
 

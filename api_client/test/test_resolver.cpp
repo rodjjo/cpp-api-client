@@ -4,7 +4,7 @@
 
 #include "api_client/test/testing.h"
 #include "api_client/api-exception.h"
-#include "api_client/asio-resolver.h"
+#include "api_client/location-resolver.h"
 
 class Fixture {
  public:

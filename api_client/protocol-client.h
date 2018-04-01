@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef API_CLIENT_ASIO_CLIENT_H_
-#define API_CLIENT_ASIO_CLIENT_H_
+#ifndef API_CLIENT_PROTOCOL_CLIENT_H_
+#define API_CLIENT_PROTOCOL_CLIENT_H_
 
 #include <memory>
 #include <functional>
@@ -18,7 +18,7 @@
 #endif
 
 #include "api_client/apiclient/apiclient.h"
-#include "api_client/asio-resolver.h"
+#include "api_client/location-resolver.h"
 #include "api_client/api-request.h"
 
 namespace apiclient {
@@ -106,12 +106,12 @@ class Client: public ClientBase {
         int timeout);
 
     void build_ssl_socket(BuildSocketHandler handler);
-    void ssl_connect(streamsocket_t *socket, ConnectHandler handler);
-    void process_ssl_request(
+
+    void process_https_request(
         sslsocket_t ssl_socket,
         std::shared_ptr<boost::asio::streambuf> message,
         ResponseHandler response_handler);
-    void process_ssl_response(
+    void process_https_response(
         sslsocket_t ssl_socket,
         ResponseHandler response_handler
     );
@@ -133,4 +133,4 @@ class Client: public ClientBase {
 
 }  // namespace apiclient
 
-#endif  // API_CLIENT_ASIO_CLIENT_H_
+#endif  // API_CLIENT_PROTOCOL_CLIENT_H_
