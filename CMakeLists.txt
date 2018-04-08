@@ -4,10 +4,12 @@ set (CMAKE_CXX_STANDARD 14)
 
 project(ApiClient C CXX)
 
-find_package (Threads)
+find_package(Threads)
+find_package(OpenSSL)
 find_package(Boost COMPONENTS system filesystem unit_test_framework thread REQUIRED)
 
 find_package(PkgConfig REQUIRED)
+
 pkg_check_modules(JSONCPP jsoncpp)
 include_directories("${JSONCPP_INCLUDE_DIRS}")
 link_libraries(${JSONCPP_LIBRARIES})

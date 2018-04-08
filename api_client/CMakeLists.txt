@@ -12,9 +12,9 @@ add_test(NAME apiclient COMMAND apiclienttest)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
     include(CodeCoverage)
-    APPEND_COVERAGE_COMPILER_FLAGS()
-    set(COVERAGE_EXCLUDES '/usr/*' '*/test/*')
     setup_target_for_coverage(NAME coverage EXECUTABLE apiclienttest)
+    # APPEND_COVERAGE_COMPILER_FLAGS()
+    set(COVERAGE_EXCLUDES '/usr/*' '*/test/*')
 endif()
 
 target_link_libraries(apiclienttest

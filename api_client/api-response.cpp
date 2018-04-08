@@ -9,58 +9,48 @@ Response::Response() {
     error_ = 0;
     status_ = 0;
     has_error_ = false;
-    parsed_ = false;
+    is_json_ = false;
 }
 
 Response::Response(int error) {
     error_ = error;
     status_ = 0;
     has_error_ = true;
-    parsed_ = false;
+    is_json_ = false;
 }
 
 Response::Response(int status, const std::string& data) {
     error_ = 0;
     status_ = status;
     has_error_ = false;
-    parsed_ = false;
+    data_ = data;
+    is_json_ = Json::Reader().parse(data, body_, false);
 }
 
 Response::~Response() {
 }
 
-void Response::parse_json() {
-    if (parsed_) {
-        return;
-    }
-    parsed_ = true;
-}
-
-int Response::get_status() {
+int Response::get_status() const {
     return status_;
 }
 
-int Response::get_error() {
+int Response::get_error() const {
     return error_;
 }
 
-bool Response::has_error() {
+bool Response::has_error() const {
     return has_error_;
 }
 
-bool Response::is_json() {
-    return false;
+bool Response::is_json() const {
+    return is_json_;
 }
 
-const Json::Value& Response::get_body() {
-    parse_json();
-    if (is_json()) {
-        return body_;
-    }
+const Json::Value& Response::get_body() const {
     return body_;
 }
 
-const std::string& Response::get_data() {
+const std::string& Response::get_data() const{
     return data_;
 }
 
