@@ -5,6 +5,7 @@
 #define API_CLIENT_PROTOCOL_CLIENT_H_
 
 #include <memory>
+#include <list>
 #include <functional>
 #include <string>
 #include <boost/thread.hpp>
@@ -38,14 +39,15 @@ class ClientIo {
 typedef std::function<void(
         const boost::system::error_code& err,
         boost::asio::ip::tcp::resolver::iterator iterator
-    )>  ConnectHandler;
-
-typedef std::function<void()> DeliveryHandler;
+)>  ConnectHandler;
 
 
 class ProtocolClientBase {
-  public:
-      ProtocolClientBase(std::shared_ptr<ClientIo> client_io, const std::string& host, int port);
+ public:
+    ProtocolClientBase(
+        std::shared_ptr<ClientIo> client_io,
+        const std::string& host,
+        int port);
 
     virtual ~ProtocolClientBase();
     virtual void make_request(
@@ -56,8 +58,11 @@ class ProtocolClientBase {
     const std::string& get_host();
     boost::asio::ip::tcp::resolver::iterator& get_resolver_iterator();
     boost::asio::io_service& get_io_service();
-    void delivery_response(std::stringstream& data, ResponseHandler response_handler, DeliveryHandler handler);
-  private:
+    void delivery_response(
+        std::stringstream& data,
+        ResponseHandler response_handler);
+
+ private:
     std::shared_ptr<Resolver> resolver_;
     std::shared_ptr<ClientIo> client_io_;
 

@@ -38,13 +38,10 @@ void HTTPClient::process_response(
                     err.value() == ERROR_VALUE_SSL_SHORT_READ
                 )
             ) {
-                delivery_response(*data.get(), response_handler, [
-                    socket
-                ] () {
-                    socket->shutdown(
+                socket->shutdown(
                         boost::asio::ip::tcp::socket::shutdown_both);
-                    socket->close();
-                });
+                socket->close();
+                delivery_response(*data.get(), response_handler);
             } else if (err) {
                 response_handler(apiclient::Response(err.value()));
             } else {

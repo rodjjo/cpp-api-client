@@ -96,13 +96,12 @@ void HTTPSClient::process_response(
                 err.value() == ERROR_VALUE_SSL_SHORT_READ
             )
         ) {
-            delivery_response(*data.get(), response_handler, [
-                ssl_socket
-            ] () {
-                auto tcp_socket = static_cast<streamsocket_t *>(ssl_socket.get());
-                tcp_socket->shutdown();
-				tcp_socket->lowest_layer().close();
-            });
+            static_cast<streamsocket_t *>(
+                ssl_socket.get())->shutdown();
+            static_cast<streamsocket_t *>(
+                ssl_socket.get())->lowest_layer().close();
+
+            delivery_response(*data.get(), response_handler);
         } else if (err) {
             response_handler(apiclient::Response(err.value()));
         } else {

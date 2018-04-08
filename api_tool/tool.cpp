@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
     printf("[main thread] Waiting\n");
 
     while (!finished) {
-        boost::this_thread::sleep(boost::posix_time::seconds(1));
+        boost::this_thread::sleep(boost::posix_time::milliseconds(1));
     }
 
     return 0;

@@ -76,15 +76,12 @@ boost::asio::io_service& ProtocolClientBase::get_io_service() {
 
 void ProtocolClientBase::delivery_response(
     std::stringstream& data,
-    ResponseHandler response_handler,
-    DeliveryHandler handler) {
+    ResponseHandler response_handler) {
     ApiHeaders headers;
     std::string body;
     int status = parse_http_stream(data, &body, &headers);
 
     response_handler(Response(body, headers, status));
-
-    handler();
 }
 
 
