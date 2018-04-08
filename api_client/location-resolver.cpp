@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
+#include <memory>
 #include "api_client/location-resolver.h"
 #include "api_client/api-exception.h"
 
@@ -31,11 +32,12 @@ const std::string& Resolver::get_host() {
 void Resolver::resolve(ResolverHandler handler) {
   char port[20] = "";
   snprintf(port, sizeof(port) - 1, "%d", port_);
-  boost::asio::ip::tcp::resolver resolver(*io_service_);
+  std::shared_ptr<boost::asio::ip::tcp::resolver> resolver;
+  resolver.reset(new boost::asio::ip::tcp::resolver(*io_service_));
   boost::asio::ip::tcp::resolver::query query(host_, port);
 
-  resolver.async_resolve(
-    query, [this, handler] (
+  resolver->async_resolve(
+    query, [this, handler, resolver] (
         const boost::system::error_code& error,
         boost::asio::ip::tcp::resolver::iterator iterator) {
       if (!error && updating_.exchange(true) == false) {

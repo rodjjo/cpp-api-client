@@ -20,12 +20,14 @@ class Response {
  public:
     Response();
     explicit Response(int error);
-    Response(int status, const std::string& data);
+    Response(const std::string& data,
+        const ApiHeaders & headers, int status);
     virtual ~Response();
     int get_status() const;
     int get_error() const;
     bool has_error() const;
     bool is_json() const;
+    const ApiHeaders& get_headers() const;
     const Json::Value& get_body() const;
     const std::string& get_data()  const;
  private:

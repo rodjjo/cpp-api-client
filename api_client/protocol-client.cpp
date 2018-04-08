@@ -6,7 +6,7 @@
 #include "api_client/protocol-client.h"
 #include "api_client/https-client.h"
 #include "api_client/http-client.h"
-
+#include "api_client/api-response.h"
 
 namespace apiclient {
 
@@ -22,9 +22,7 @@ ClientIo::ClientIo(unsigned char num_threads) {
                 new boost::thread([this] () {
                     io_service.reset();
                     io_service.run();
-                })
-            )
-        );
+                })));
     }
 }
 
@@ -38,9 +36,12 @@ ClientIo::~ClientIo() {
 
 
 ProtocolClientBase::ProtocolClientBase(
-    std::shared_ptr<ClientIo> client_io, const std::string& host, int port): resolver_(
-        new Resolver(&client_io->io_service, host, port)
-    ) {
+    std::shared_ptr<ClientIo> client_io,
+    const std::string& host,
+    int port
+): resolver_(
+    new Resolver(&client_io->io_service, host, port)
+) {
     client_io_ = client_io;
 }
 
@@ -77,8 +78,11 @@ void ProtocolClientBase::delivery_response(
     std::stringstream& data,
     ResponseHandler response_handler,
     DeliveryHandler handler) {
+    ApiHeaders headers;
+    std::string body;
+    int status = parse_http_stream(data, &body, &headers);
 
-    response_handler(Response()); // TODO(RODRIGO): write response
+    response_handler(Response(body, headers, status));
 
     handler();
 }

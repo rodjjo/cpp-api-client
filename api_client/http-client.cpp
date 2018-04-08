@@ -17,50 +17,45 @@ HTTPClient::~HTTPClient() {
 }
 
 void HTTPClient::process_response(
-    std::shared_ptr<boost::asio::ip::tcp::socket> socket, ResponseHandler response_handler
+    std::shared_ptr<boost::asio::ip::tcp::socket> socket,
+    std::shared_ptr<boost::asio::streambuf> buffer,
+    std::shared_ptr<std::stringstream> data,
+    ResponseHandler response_handler
 ) {
-    std::function<void(const boost::system::error_code&, std::size_t)> read_handler;
+    boost::asio::async_read(
+        *socket.get(),
+        *buffer.get(),
+        boost::asio::transfer_at_least(1), [
+            this,
+            socket,
+            buffer,
+            data,
+            response_handler
+        ] (const boost::system::error_code& err, std::size_t bytestransfered) {
+            if (
+                err.value() == boost::asio::error::eof  || (
+                    err.category() == boost::asio::error::get_ssl_category() &&
+                    err.value() == ERROR_VALUE_SSL_SHORT_READ
+                )
+            ) {
+                delivery_response(*data.get(), response_handler, [
+                    socket
+                ] () {
+                    socket->shutdown(
+                        boost::asio::ip::tcp::socket::shutdown_both);
+                    socket->close();
+                });
+            } else if (err) {
+                response_handler(apiclient::Response(err.value()));
+            } else {
+                if (bytestransfered) {
+                    (*data.get()) << &(*buffer.get());
+                }
 
-    std::shared_ptr<boost::asio::streambuf> buffer(new boost::asio::streambuf());
-    std::shared_ptr<std::stringstream> data(new std::stringstream());
-
-    read_handler = [
-        this,
-        socket,
-        &read_handler,
-        buffer,
-        data,
-        response_handler
-    ] (const boost::system::error_code& err, std::size_t bytestransfered) {
-        if (
-             err.value() == boost::asio::error::eof  || (
-                err.category() == boost::asio::error::get_ssl_category() &&
-                err.value() == ERROR_VALUE_SSL_SHORT_READ
-            )
-        ) {
-            delivery_response(*data.get(), response_handler, [
-                socket
-            ] () {
-                socket->shutdown(boost::asio::ip::tcp::socket::shutdown_both);
-				socket->close();
-            });
-        } else if (err) {
-            response_handler(apiclient::Response(err.value()));
-        } else {
-            if (bytestransfered) {
-                (*data.get()) << &(*buffer.get());
+                process_response(
+                    socket, buffer, data, response_handler);
             }
-
-            boost::asio::async_read(
-                *socket.get(),
-                *buffer.get(),
-                boost::asio::transfer_at_least(1),
-                read_handler
-            );
-        }
-    };
-
-    read_handler(boost::system::errc::make_error_code(boost::system::errc::success), 0);
+        });
 }
 
 void HTTPClient::make_request(
@@ -103,11 +98,15 @@ void HTTPClient::make_request(
                             return;
                         }
 
-                        process_response(socket, response_handler);
-                    }
-                );
-            }
-        );
+                        std::shared_ptr<boost::asio::streambuf> buffer(
+                            new boost::asio::streambuf());
+                        std::shared_ptr<std::stringstream> data(
+                            new std::stringstream());
+
+                        process_response(
+                            socket, buffer, data, response_handler);
+                    });
+            });
     });
 }
 

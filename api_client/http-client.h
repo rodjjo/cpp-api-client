@@ -45,7 +45,10 @@ class HTTPClient: public ProtocolClientBase {
         ResponseHandler response_handler,
         int timeout) override;
  private:
-    void process_response(std::shared_ptr<boost::asio::ip::tcp::socket> socket, ResponseHandler response_handler);
+    void process_response(std::shared_ptr<boost::asio::ip::tcp::socket> socket,
+        std::shared_ptr<boost::asio::streambuf> buffer,
+        std::shared_ptr<std::stringstream> data,
+        ResponseHandler response_handler);
 };
 
 }  // namespace apiclient
