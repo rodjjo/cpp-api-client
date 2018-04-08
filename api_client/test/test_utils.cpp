@@ -42,12 +42,12 @@ BOOST_AUTO_TEST_CASE(test_decompose_url_valid) {
     std::string url5("http://testeurl5:8080");
     std::string url6("https://testeurl6:9090");
 
-    apiclient::url_fragments_t url_frag1 = apiclient::decompose_url(url1);
-    apiclient::url_fragments_t url_frag2 = apiclient::decompose_url(url2);
-    apiclient::url_fragments_t url_frag3 = apiclient::decompose_url(url3);
-    apiclient::url_fragments_t url_frag4 = apiclient::decompose_url(url4);
-    apiclient::url_fragments_t url_frag5 = apiclient::decompose_url(url5);
-    apiclient::url_fragments_t url_frag6 = apiclient::decompose_url(url6);
+    apiclient::location_t url_frag1 = apiclient::decompose_url(url1);
+    apiclient::location_t url_frag2 = apiclient::decompose_url(url2);
+    apiclient::location_t url_frag3 = apiclient::decompose_url(url3);
+    apiclient::location_t url_frag4 = apiclient::decompose_url(url4);
+    apiclient::location_t url_frag5 = apiclient::decompose_url(url5);
+    apiclient::location_t url_frag6 = apiclient::decompose_url(url6);
 
     BOOST_CHECK_EQUAL(true, url_frag1.valid);
     BOOST_CHECK_EQUAL(true, url_frag2.valid);

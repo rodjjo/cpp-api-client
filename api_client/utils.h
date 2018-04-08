@@ -14,10 +14,10 @@ typedef struct {
   bool secure;
   std::string host;
   int port;
-} url_fragments_t;
+} location_t;
 
 bool is_json_content_type(const std::pair<std::string, std::string> &header);
-url_fragments_t decompose_url(const std::string& url);
+location_t decompose_url(const std::string& url);
 
 }  // namespace apiclient
 

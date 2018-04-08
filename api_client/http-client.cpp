@@ -9,8 +9,8 @@
 namespace apiclient {
 
 HTTPClient::HTTPClient(std::shared_ptr<ClientIo> client_io,
-    url_fragments_t url_fragments) :
-        ProtocolClientBase(client_io, url_fragments.host, url_fragments.port) {
+    location_t location) :
+        ProtocolClientBase(client_io, location.host, location.port) {
 }
 
 HTTPClient::~HTTPClient() {

@@ -9,8 +9,8 @@
 namespace apiclient {
 
 HTTPSClient::HTTPSClient(std::shared_ptr<ClientIo> client_io,
-        url_fragments_t url_fragments,
-        asio_ssl::verify_mode ssl_verify_mode) : ProtocolClientBase(client_io, url_fragments.host, url_fragments.port) {
+        location_t location,
+        asio_ssl::verify_mode ssl_verify_mode) : ProtocolClientBase(client_io, location.host, location.port) {
     ssl_verify_mode_ = ssl_verify_mode;
     ssl_context_.reset(
         new boost::asio::ssl::context(boost::asio::ssl::context::tlsv12)

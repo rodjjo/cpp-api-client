@@ -76,7 +76,7 @@ void ProtocolClientBase::delivery_response(
 
 Client::Client(std::shared_ptr<ClientIo> client_io,
     const std::string& base_url, asio_ssl::verify_mode ssl_verify_mode) {
-  url_fragments_t fragments = apiclient::decompose_url(base_url);
+  location_t fragments = apiclient::decompose_url(base_url);
   if (!fragments.valid) {
     throw ApiException((std::string("Invalid url: ") + base_url).c_str());
   }

@@ -37,7 +37,7 @@ typedef std::function<void (
 class HTTPSClient: public ProtocolClientBase {
  public:
     HTTPSClient(std::shared_ptr<ClientIo> client_io,
-        url_fragments_t url_fragments,
+        location_t location,
         asio_ssl::verify_mode ssl_verify_mode);
     virtual ~HTTPSClient();
 

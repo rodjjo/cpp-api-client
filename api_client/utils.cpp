@@ -21,11 +21,11 @@ bool is_json_content_type(const std::pair<std::string, std::string> &header) {
     std::regex_search(header.second, json_regex);
 }
 
-url_fragments_t decompose_url(const std::string& url) {
+location_t decompose_url(const std::string& url) {
   std::cmatch base_match;
   auto matched = std::regex_match(url.c_str(), base_match, url_regex1);
 
-  url_fragments_t result;
+  location_t result;
   result.port = 80;
   result.valid = false;
   result.secure = false;

@@ -36,7 +36,7 @@ typedef std::function<void (
 class HTTPClient: public ProtocolClientBase {
  public:
     HTTPClient(
-        std::shared_ptr<ClientIo> client_io, url_fragments_t url_fragments
+        std::shared_ptr<ClientIo> client_io, location_t location
     );
     virtual ~HTTPClient();
 
