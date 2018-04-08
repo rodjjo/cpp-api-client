@@ -74,7 +74,7 @@ class ClientBuilderBase {
     virtual std::shared_ptr<ClientBase> client(const std::string& base_url) = 0;
 };
 
-std::shared_ptr<ClientBuilderBase> builder();
+std::shared_ptr<ClientBuilderBase> builder(unsigned char num_threads);
 
 }  // namespace apiclient
 

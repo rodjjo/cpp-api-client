@@ -25,14 +25,14 @@ namespace apiclient {
 
 class ClientIo {
  public:
-    ClientIo();
+    explicit ClientIo(unsigned char num_threads);
     virtual ~ClientIo();
 
     boost::asio::io_service io_service;
 
  private:
     std::shared_ptr<boost::asio::io_service::work> work_;
-    std::shared_ptr<boost::thread> thread_;
+    std::list<std::shared_ptr<boost::thread> > threads_;
 };
 
 

@@ -5,7 +5,7 @@
 
 namespace apiclient {
 
-ClientBuilder::ClientBuilder(): client_io_(new ClientIo()) {
+ClientBuilder::ClientBuilder(unsigned char num_threads): client_io_(new ClientIo(num_threads)) {
 }
 
 ClientBuilder::~ClientBuilder() {

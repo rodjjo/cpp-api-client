@@ -14,8 +14,8 @@ ClientBase::~ClientBase() {
 ClientBuilderBase::~ClientBuilderBase() {
 }
 
-std::shared_ptr<ClientBuilderBase> builder() {
-    return std::shared_ptr<ClientBuilderBase> (new ClientBuilder());
+std::shared_ptr<ClientBuilderBase> builder(unsigned char num_threads) {
+    return std::shared_ptr<ClientBuilderBase> (new ClientBuilder(num_threads));
 }
 
 }  // namespace apiclient
