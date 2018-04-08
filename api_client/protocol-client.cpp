@@ -47,7 +47,7 @@ ProtocolClientBase::ProtocolClientBase(
 ProtocolClientBase::~ProtocolClientBase() {
 }
 
-void ProtocolClientBase::resolve(resolver_function handler) {
+void ProtocolClientBase::resolve(ResolverHandler handler) {
     if (resolver_->get()) {
         auto success = boost::system::errc::success;
         handler(boost::system::errc::make_error_code(success),

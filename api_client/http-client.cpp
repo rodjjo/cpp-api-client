@@ -68,39 +68,47 @@ void HTTPClient::make_request(
     ResponseHandler response_handler,
     int timeout
 ) {
-    std::shared_ptr<boost::asio::ip::tcp::socket> socket(
-        new boost::asio::ip::tcp::socket(get_io_service())
-    );
-
-    boost::asio::async_connect(
-        *socket.get(),
-        get_resolver_iterator(),
-        [this, socket, message, response_handler] (
+    resolve([this, response_handler, message] (
             const boost::system::error_code& err,
-             boost::asio::ip::tcp::resolver::iterator resolver
-        ) {
-            if (err) {
-                response_handler(apiclient::Response(err.value()));
-                return;
-            }
-
-            boost::asio::async_write(
-                *socket.get(),
-                *message.get(),
-                [this, socket, response_handler] (
-                    const boost::system::error_code& err,
-                    std::size_t bytestransfered
-                ) {
-                    if (err) {
-                        response_handler(apiclient::Response(err.value()));
-                        return;
-                    }
-
-                    process_response(socket, response_handler);
-                }
-			);
+            boost::asio::ip::tcp::resolver::iterator iter) {
+        if (err) {
+            response_handler(apiclient::Response(err.value()));
+            return;
         }
-    );
+
+        std::shared_ptr<boost::asio::ip::tcp::socket> socket(
+            new boost::asio::ip::tcp::socket(get_io_service()));
+
+        boost::asio::async_connect(
+            *socket.get(),
+            get_resolver_iterator(),
+            [this, socket, message, response_handler] (
+                const boost::system::error_code& err,
+                boost::asio::ip::tcp::resolver::iterator resolver
+            ) {
+                if (err) {
+                    response_handler(apiclient::Response(err.value()));
+                    return;
+                }
+
+                boost::asio::async_write(
+                    *socket.get(),
+                    *message.get(),
+                    [this, socket, response_handler] (
+                        const boost::system::error_code& err,
+                        std::size_t bytestransfered
+                    ) {
+                        if (err) {
+                            response_handler(apiclient::Response(err.value()));
+                            return;
+                        }
+
+                        process_response(socket, response_handler);
+                    }
+                );
+            }
+        );
+    });
 }
 
 }  // namespace apiclient

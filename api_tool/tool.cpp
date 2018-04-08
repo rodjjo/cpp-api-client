@@ -28,7 +28,8 @@ int main(int argc, char** argv) {
         Json::StyledWriter jw;
         auto s = jw.write(r.get_body());
 
-        printf("%s", s.c_str());
+        printf("Raw: %s", r.get_data().c_str());
+        printf("Json: %s", s.c_str());
 
         finished = true;
     });

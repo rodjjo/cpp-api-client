@@ -35,10 +35,6 @@ class ClientIo {
     std::list<std::shared_ptr<boost::thread> > threads_;
 };
 
-
-typedef std::function<void(boost::system::error_code error,
-    boost::asio::ip::tcp::resolver::iterator)> resolver_function;
-
 typedef std::function<void(
         const boost::system::error_code& err,
         boost::asio::ip::tcp::resolver::iterator iterator
@@ -56,7 +52,7 @@ class ProtocolClientBase {
         std::shared_ptr<boost::asio::streambuf> message,
         ResponseHandler response_handler,
         int timeout) = 0;
-    void resolve(resolver_function handler);
+    void resolve(ResolverHandler handler);
     const std::string& get_host();
     boost::asio::ip::tcp::resolver::iterator& get_resolver_iterator();
     boost::asio::io_service& get_io_service();
