@@ -19,15 +19,15 @@ HTTPClient::~HTTPClient() {
 void HTTPClient::process_response(
     std::shared_ptr<boost::asio::ip::tcp::socket> socket, ResponseHandler response_handler
 ) {
-    std::function<void(const boost::system::error_code&, std::size_t)> handler_read;
+    std::function<void(const boost::system::error_code&, std::size_t)> read_handler;
 
     std::shared_ptr<boost::asio::streambuf> buffer(new boost::asio::streambuf());
     std::shared_ptr<std::stringstream> data(new std::stringstream());
 
-    handler_read = [
+    read_handler = [
         this,
         socket,
-        &handler_read,
+        &read_handler,
         buffer,
         data,
         response_handler
@@ -50,18 +50,17 @@ void HTTPClient::process_response(
             if (bytestransfered) {
                 (*data.get()) << &(*buffer.get());
             }
-/*
+
             boost::asio::async_read(
-                *static_cast<streamsocket_t *>(socket.get()),
+                *socket.get(),
                 *buffer.get(),
                 boost::asio::transfer_at_least(1),
-                handler_read
+                read_handler
             );
-*/
         }
     };
 
-    handler_read(boost::system::errc::make_error_code(boost::system::errc::success), 0);
+    read_handler(boost::system::errc::make_error_code(boost::system::errc::success), 0);
 }
 
 void HTTPClient::make_request(

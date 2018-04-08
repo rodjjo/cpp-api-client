@@ -17,6 +17,9 @@ typedef int SSL;
 namespace boost {
 namespace asio {
 
+
+int transfer_at_least(int value);
+
 namespace placeholders {
 
 class error {
@@ -197,6 +200,10 @@ typedef std::function<void(
   const boost::system::error_code&, std::size_t
 )> WriteHandler;
 
+typedef std::function<void(
+  const boost::system::error_code&, std::size_t
+)> ReadHandler;
+
 void async_connect(boost::asio::ip::tcp::socket& s,
     boost::asio::ip::tcp::resolver::iterator begin,
     ComposedConnectHandler handler);
@@ -204,6 +211,12 @@ void async_connect(boost::asio::ip::tcp::socket& s,
 void async_write(boost::asio::ip::tcp::socket& s,
     boost::asio::streambuf &buffer,
     WriteHandler handler);
+
+void async_read(boost::asio::ip::tcp::socket& s,
+                boost::asio::streambuf &buffer,
+                int transferr,
+                ReadHandler read_handler
+            );
 
 namespace ssl {
 

@@ -40,6 +40,19 @@ void async_write(boost::asio::ip::tcp::socket& s,
 
 }
 
+void async_read(boost::asio::ip::tcp::socket& s,
+                boost::asio::streambuf &buffer,
+                int transferr,
+                ReadHandler read_handler
+            ) {
+
+}
+
+int transfer_at_least(int value) {
+  return value;
+}
+
+
 
 namespace error {
 
