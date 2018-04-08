@@ -65,7 +65,8 @@ const std::string& ProtocolClientBase::get_host() {
     return resolver_->get_host();
 }
 
-boost::asio::ip::tcp::resolver::iterator& ProtocolClientBase::get_resolver_iterator() {
+boost::asio::ip::tcp::resolver::iterator&
+        ProtocolClientBase::get_resolver_iterator() {
     return *resolver_->get();
 }
 

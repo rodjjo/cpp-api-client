@@ -2,6 +2,7 @@
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
 #include <string>
+#include <boost/algorithm/string.hpp>
 #include "api_client/apiclient/apiclient.h"
 #include "api_client/api-response.h"
 
@@ -89,8 +90,8 @@ int parse_http_stream(
         separator_position = line.find_first_of(':');
         if (separator_position != std::string::npos) {
             (*headers) [
-                line.substr(0, separator_position)
-            ] = line.substr(separator_position + 1);
+                boost::trim_copy(line.substr(0, separator_position))
+            ] = boost::trim_copy(line.substr(separator_position + 1));
         }
     }
 

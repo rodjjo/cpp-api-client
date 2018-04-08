@@ -33,6 +33,11 @@ int main(int argc, char** argv) {
             printf("Status code: %d\n", r.get_status());
             printf("Raw: %s\n", r.get_data().c_str());
             printf("Json: %s\n", s.c_str());
+            printf("response headers: \n");
+            for (auto it = r.get_headers().begin();
+                    it != r.get_headers().end(); it++) {
+                printf("%s: %s\n", it->first.c_str(), it->second.c_str());
+            }
         }
         finished = true;
     });
