@@ -17,6 +17,21 @@ typedef int SSL;
 namespace boost {
 namespace asio {
 
+namespace placeholders {
+
+class error {
+  public:
+    int value() {
+      return 0;
+    }
+
+    operator bool() {
+      return false;
+    }
+};
+
+};
+
 namespace ssl {
 
 class stream_base {
@@ -134,11 +149,18 @@ class socket {
   socket(boost::asio::io_service& io_service, boost::asio::ssl::context& context) {
   }
 
+  socket(const boost::asio::io_service& io_service) {
+  }
+
   socket& lowest_layer() {
     return *this;
   }
 
-  void shutdown() {
+  enum shuttdown_types {
+    shutdown_both = 2
+  };
+
+  void shutdown(int shutdown_type = 0) {
   }
 
   void close() {

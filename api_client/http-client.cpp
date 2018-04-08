@@ -77,7 +77,8 @@ void HTTPClient::make_request(
         *socket.get(),
         get_resolver_iterator(),
         [this, socket, message, response_handler] (
-            const boost::asio::placeholders::error& err
+            const boost::system::error_code& err,
+             boost::asio::ip::tcp::resolver::iterator resolver
         ) {
             if (err) {
                 response_handler(apiclient::Response(err.value()));
@@ -88,7 +89,7 @@ void HTTPClient::make_request(
                 *socket.get(),
                 *message.get(),
                 [this, socket, response_handler] (
-                    const boost::asio::placeholders::error& err,
+                    const boost::system::error_code& err,
                     std::size_t bytestransfered
                 ) {
                     if (err) {
@@ -97,7 +98,7 @@ void HTTPClient::make_request(
                     }
 
                     process_response(socket, response_handler);
-                };
+                }
 			);
         }
     );
