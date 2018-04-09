@@ -41,6 +41,7 @@ class HTTPClient: public ProtocolClientBase {
     virtual ~HTTPClient();
 
     void make_request(
+        boost::asio::ip::tcp::resolver::iterator iter,
         std::shared_ptr<boost::asio::streambuf> message,
         ResponseHandler response_handler,
         int timeout) override;

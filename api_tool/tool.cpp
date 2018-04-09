@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
 
     printf("Getting the client\n");
     // https://httpbin.org/get
-    auto api_client = api_builder->client("http://httpbin.org");
+    auto api_client = api_builder->client("https://httpbin.org");
 
     bool finished = false;
 

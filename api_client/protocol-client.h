@@ -51,6 +51,7 @@ class ProtocolClientBase {
 
     virtual ~ProtocolClientBase();
     virtual void make_request(
+        boost::asio::ip::tcp::resolver::iterator iter,
         std::shared_ptr<boost::asio::streambuf> message,
         ResponseHandler response_handler,
         int timeout) = 0;
@@ -62,6 +63,12 @@ class ProtocolClientBase {
         std::stringstream& data,
         ResponseHandler response_handler);
 
+ private:
+    friend class Client;
+    void make_request(
+        std::shared_ptr<boost::asio::streambuf> message,
+        ResponseHandler response_handler,
+        int timeout);
  private:
     std::shared_ptr<Resolver> resolver_;
     std::shared_ptr<ClientIo> client_io_;
@@ -95,6 +102,7 @@ class Client: public ClientBase {
         const Json::Value& body,
         ResponseHandler response_handler,
         int timeout = 0, const ApiHeaders *headers = NULL) override;
+
  private:
     const std::string& get_host();
     std::shared_ptr<boost::asio::streambuf> get_message(

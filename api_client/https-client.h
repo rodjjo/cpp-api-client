@@ -42,13 +42,14 @@ class HTTPSClient: public ProtocolClientBase {
     virtual ~HTTPSClient();
 
     void make_request(
+        boost::asio::ip::tcp::resolver::iterator iter,
         std::shared_ptr<boost::asio::streambuf> message,
         ResponseHandler response_handler,
         int timeout) override;
 
  protected:
-
-    bool verify_certificate(bool preverified, asio_ssl::verify_context& ctx);
+    bool verify_certificate(
+        bool preverified, asio_ssl::verify_context& ctx);
 
     void build_ssl_socket(BuildSocketHandler handler);
 
@@ -58,12 +59,13 @@ class HTTPSClient: public ProtocolClientBase {
         ResponseHandler response_handler);
     void process_response(
         sslsocket_t ssl_socket,
-        ResponseHandler response_handler
-    );
-
+        std::shared_ptr<boost::asio::streambuf> buffer,
+        std::shared_ptr<std::stringstream> data,
+        ResponseHandler response_handler);
     void request(std::shared_ptr<boost::asio::streambuf> message,
         ResponseHandler response_handler,
         int timeout = 0);
+
  private:
     asio_ssl::verify_mode ssl_verify_mode_;
     std::shared_ptr<boost::asio::ssl::context> ssl_context_;

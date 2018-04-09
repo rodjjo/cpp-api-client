@@ -85,6 +85,22 @@ void ProtocolClientBase::delivery_response(
     response_handler(Response(body, headers, status));
 }
 
+void ProtocolClientBase::make_request(
+        std::shared_ptr<boost::asio::streambuf> message,
+        ResponseHandler response_handler,
+        int timeout) {
+    resolve([this, response_handler, message, timeout] (
+            const boost::system::error_code& err,
+            boost::asio::ip::tcp::resolver::iterator iter) {
+        if (err) {
+            response_handler(apiclient::Response(err.value()));
+            return;
+        }
+
+        make_request(iter, message, response_handler, timeout);
+    });
+}
+
 
 
 Client::Client(std::shared_ptr<ClientIo> client_io,

@@ -22,16 +22,19 @@ HTTPSClient::~HTTPSClient() {
 }
 
 void HTTPSClient::make_request(
+    boost::asio::ip::tcp::resolver::iterator iter,
     std::shared_ptr<boost::asio::streambuf> message,
     ResponseHandler response_handler,
     int timeout
 ) {
-    auto handle_build_socket = [this, message, response_handler, timeout] (
-        sslsocket_t ssl_socket
+    auto handle_build_socket = [
+        this, message, response_handler, timeout, iter] (
+            sslsocket_t ssl_socket
     ) {
-        auto handle_connect = [this, ssl_socket, message, response_handler, timeout] (
-            const boost::system::error_code& err,
-            boost::asio::ip::tcp::resolver::iterator iterator
+        auto handle_connect = [
+            this, ssl_socket, message,  response_handler, timeout] (
+                const boost::system::error_code& err,
+                boost::asio::ip::tcp::resolver::iterator iterator
         ) {
             if (err) {
                 response_handler(apiclient::Response(err.value()));
@@ -42,15 +45,15 @@ void HTTPSClient::make_request(
 
         boost::asio::async_connect(
             static_cast<streamsocket_t *>(ssl_socket.get())->lowest_layer(),
-            get_resolver_iterator(),
-            handle_connect
-        );
+            iter,
+            handle_connect);
     };
 
     build_ssl_socket(handle_build_socket);
 }
 
-bool HTTPSClient::verify_certificate(bool preverified, asio_ssl::verify_context& ctx) {
+bool HTTPSClient::verify_certificate(bool preverified,
+        asio_ssl::verify_context& ctx) {
     return preverified;
 }
 
@@ -75,49 +78,43 @@ void HTTPSClient::build_ssl_socket(BuildSocketHandler handler) {
 
 void HTTPSClient::process_response(
     sslsocket_t ssl_socket,
+    std::shared_ptr<boost::asio::streambuf> buffer,
+    std::shared_ptr<std::stringstream> data,
     ResponseHandler response_handler
 ) {
-    std::function<void(const boost::system::error_code&, std::size_t)> read_handler;
-
-    std::shared_ptr<boost::asio::streambuf> buffer(new boost::asio::streambuf());
-    std::shared_ptr<std::stringstream> data(new std::stringstream());
-
-    read_handler = [
-        this,
-        ssl_socket,
-        &read_handler,
-        buffer,
-        data,
-        response_handler
-    ] (const boost::system::error_code& err, std::size_t bytestransfered) {
-        if (
-             err.value() == boost::asio::error::eof  || (
-                err.category() == boost::asio::error::get_ssl_category() &&
-                err.value() == ERROR_VALUE_SSL_SHORT_READ
-            )
-        ) {
-            static_cast<streamsocket_t *>(
+    boost::asio::async_read(
+        *static_cast<streamsocket_t *>(ssl_socket.get()),
+        *buffer.get(),
+        boost::asio::transfer_at_least(1), [
+            this,
+            ssl_socket,
+            buffer,
+            data,
+            response_handler
+        ] (const boost::system::error_code& err, std::size_t bytestransfered) {
+            if (
+                err.value() == boost::asio::error::eof  || (
+                    err.category() == boost::asio::error::get_ssl_category() &&
+                    err.value() == ERROR_VALUE_SSL_SHORT_READ
+                )
+            ) {
+                static_cast<streamsocket_t *>(
                 ssl_socket.get())->shutdown();
-            static_cast<streamsocket_t *>(
+                static_cast<streamsocket_t *>(
                 ssl_socket.get())->lowest_layer().close();
 
-            delivery_response(*data.get(), response_handler);
-        } else if (err) {
-            response_handler(apiclient::Response(err.value()));
-        } else {
-            if (bytestransfered) {
-                (*data.get()) << &(*buffer.get());
-            }
-            boost::asio::async_read(
-                *static_cast<streamsocket_t *>(ssl_socket.get()),
-                *buffer.get(),
-                boost::asio::transfer_at_least(1),
-                read_handler
-            );
-        }
-    };
+                delivery_response(*data.get(), response_handler);
+            } else if (err) {
+                response_handler(apiclient::Response(err.value()));
+            } else {
+                if (bytestransfered) {
+                    (*data.get()) << &(*buffer.get());
+                }
 
-    read_handler(boost::system::errc::make_error_code(boost::system::errc::success), 0);
+                process_response(
+                    ssl_socket, buffer, data, response_handler);
+            }
+        });
 }
 
 void HTTPSClient::process_request(
@@ -152,7 +149,13 @@ void HTTPSClient::process_request(
                         return;
                     }
 
-                    process_response(ssl_socket, response_handler);
+                    std::shared_ptr<boost::asio::streambuf> buffer(
+                        new boost::asio::streambuf());
+                    std::shared_ptr<std::stringstream> data(
+                        new std::stringstream());
+
+                    process_response(
+                        ssl_socket, buffer, data, response_handler);
                 }
             );
         }
