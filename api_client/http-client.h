@@ -13,13 +13,14 @@
 #include "api_client/test/mocks/asio.hpp"
 #else
 #include <boost/asio.hpp>
-#include <boost/asio/ssl.hpp>
 #endif
 
 #include "api_client/apiclient/apiclient.h"
 #include "api_client/location-resolver.h"
 #include "api_client/api-request.h"
 #include "api_client/protocol-client.h"
+#include "api_client/api-socket.h"
+
 
 namespace apiclient {
 
@@ -31,22 +32,32 @@ typedef boost::asio::ssl::stream<boost::asio::ip::tcp::socket> streamsocket_t;
 
 typedef std::function<void (
         sslsocket_t ssl_socket
-    )> BuildSocketHandler;
+)> BuildSocketHandler;
+
+
+typedef std::function<void (
+    const boost::system::error_code& error,
+    std::shared_ptr<ApiSocket> socket
+)> ConnectHandler;
 
 class HTTPClient: public ProtocolClientBase {
  public:
     HTTPClient(
-        std::shared_ptr<ClientIo> client_io, location_t location
-    );
+        std::shared_ptr<ClientIo> client_io, location_t location);
     virtual ~HTTPClient();
 
-    void make_request(
+    virtual void connect(
+        boost::asio::ip::tcp::resolver::iterator iter,
+        unsigned int timeout,
+        ConnectHandler handler);
+
+    virtual void make_request(
         boost::asio::ip::tcp::resolver::iterator iter,
         std::shared_ptr<boost::asio::streambuf> message,
         ResponseHandler response_handler,
-        int timeout) override;
+        int timeout);
  private:
-    void process_response(std::shared_ptr<boost::asio::ip::tcp::socket> socket,
+    void process_response(std::shared_ptr<ApiSocket> api_socket,
         std::shared_ptr<boost::asio::streambuf> buffer,
         std::shared_ptr<std::stringstream> data,
         ResponseHandler response_handler);

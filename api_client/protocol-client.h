@@ -36,11 +36,6 @@ class ClientIo {
     std::list<std::shared_ptr<boost::thread> > threads_;
 };
 
-typedef std::function<void(
-        const boost::system::error_code& err,
-        boost::asio::ip::tcp::resolver::iterator iterator
-)>  ConnectHandler;
-
 
 class ProtocolClientBase {
  public:
@@ -58,7 +53,7 @@ class ProtocolClientBase {
     void resolve(ResolverHandler handler);
     const std::string& get_host();
     boost::asio::ip::tcp::resolver::iterator& get_resolver_iterator();
-    boost::asio::io_service& get_io_service();
+    boost::asio::io_service* get_io_service();
     void delivery_response(
         std::stringstream& data,
         ResponseHandler response_handler);

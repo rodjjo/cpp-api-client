@@ -8,6 +8,7 @@
 #include <sstream>
 #include <functional>
 #include <boost/system/error_code.hpp>
+#include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/asio/streambuf.hpp>
 
 #define ERROR_VALUE_SSL_SHORT_READ 1000
@@ -17,13 +18,12 @@ typedef int SSL;
 namespace boost {
 namespace asio {
 
-
 int transfer_at_least(int value);
 
 namespace placeholders {
 
 class error {
-  public:
+ public:
     int value() {
       return 0;
     }
@@ -38,7 +38,7 @@ class error {
 namespace ssl {
 
 class stream_base {
-  public:
+ public:
     enum handshake_type {
       client,
       server
@@ -52,7 +52,7 @@ enum {
 typedef int verify_mode;
 
 class verify_context {
-  public:
+ public:
 };
 
 class context {
@@ -99,6 +99,24 @@ class io_service {
 
   void stop() {
   }
+};
+
+class deadline_timer {
+ public:
+    typedef std::function<void(
+      const boost::system::error_code& error)> WaitHandler;
+
+    explicit deadline_timer(io_service&) {
+    }
+
+    void cancel(boost::system::error_code&) {
+    }
+
+    void expires_from_now(const boost::posix_time::time_duration& time) {
+    }
+
+    void async_wait(WaitHandler handler) {
+    }
 };
 
 namespace ip {
@@ -149,6 +167,8 @@ typedef std::function<void(const boost::system::error_code& err)> HandshakeHandl
 
 class socket {
  public:
+  typedef socket lowest_layer_type;
+
   socket(boost::asio::io_service& io_service, boost::asio::ssl::context& context) {
   }
 
@@ -166,7 +186,10 @@ class socket {
   void shutdown(int shutdown_type = 0) {
   }
 
-  void close() {
+  void close(boost::system::error_code&) {
+  }
+
+  void cancel(boost::system::error_code&) {
   }
 
   void async_handshake(

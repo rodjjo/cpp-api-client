@@ -13,17 +13,14 @@
 
 
 int main(int argc, char** argv) {
-    printf("creating client builder\n");
     auto api_builder = apiclient::builder(4);
 
-    printf("Getting the client\n");
-    // https://httpbin.org/get
     auto api_client = api_builder->client("https://httpbin.org");
 
     bool finished = false;
 
     printf("Invoking get method\n");
-    api_client->get("/get", [&finished] (const apiclient::Response& r) {
+    api_client->get("/get?test=134", [&finished] (const apiclient::Response& r) {
         printf("Parsing the response\n");
         if (r.has_error()) {
             printf("Has error! %d\n", r.get_error());

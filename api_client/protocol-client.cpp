@@ -70,8 +70,8 @@ boost::asio::ip::tcp::resolver::iterator&
     return *resolver_->get();
 }
 
-boost::asio::io_service& ProtocolClientBase::get_io_service() {
-    return client_io_->io_service;
+boost::asio::io_service* ProtocolClientBase::get_io_service() {
+    return &client_io_->io_service;
 }
 
 
