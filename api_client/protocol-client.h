@@ -10,41 +10,21 @@
 #include <string>
 #include <boost/thread.hpp>
 
-#ifdef UNIT_TEST
-#include "api_client/test/mocks/asio.hpp"
-#else
-#include <boost/asio.hpp>
-#include <boost/asio/ssl.hpp>
-#define ERROR_VALUE_SSL_SHORT_READ ERR_PACK(ERR_LIB_SSL, 0, SSL_R_SHORT_READ)
-#endif
-
-#include "api_client/apiclient/apiclient.h"
+#include "api_client/api-asio.h"
 #include "api_client/location-resolver.h"
 #include "api_client/api-request.h"
+#include "api_client/api-client-io.h"
 
 namespace apiclient {
 
-class ClientIo {
+class ProtocolClient {
  public:
-    explicit ClientIo(unsigned char num_threads);
-    virtual ~ClientIo();
-
-    boost::asio::io_service io_service;
-
- private:
-    std::shared_ptr<boost::asio::io_service::work> work_;
-    std::list<std::shared_ptr<boost::thread> > threads_;
-};
-
-
-class ProtocolClientBase {
- public:
-    ProtocolClientBase(
+    ProtocolClient(
         std::shared_ptr<ClientIo> client_io,
         const std::string& host,
         int port);
 
-    virtual ~ProtocolClientBase();
+    virtual ~ProtocolClient();
     virtual void make_request(
         boost::asio::ip::tcp::resolver::iterator iter,
         std::shared_ptr<boost::asio::streambuf> message,
@@ -57,56 +37,14 @@ class ProtocolClientBase {
     void delivery_response(
         std::stringstream& data,
         ResponseHandler response_handler);
-
- private:
-    friend class Client;
     void make_request(
         std::shared_ptr<boost::asio::streambuf> message,
         ResponseHandler response_handler,
         int timeout);
+
  private:
     std::shared_ptr<Resolver> resolver_;
     std::shared_ptr<ClientIo> client_io_;
-
-};
-
-namespace asio_ssl = boost::asio::ssl;
-
-class Client: public ClientBase {
- public:
-    Client(std::shared_ptr<ClientIo> client_io,
-        const std::string& base_url,
-        asio_ssl::verify_mode ssl_verify_mode = asio_ssl::verify_none);
-    virtual ~Client();
-    void get(const std::string& query_string,
-        ResponseHandler response_handler,
-        int timeout = 0, const ApiHeaders *headers = NULL) override;
-    void post(const std::string& query_string,
-        const Json::Value& body,
-        ResponseHandler response_handler,
-        int timeout = 0, const ApiHeaders *headers = NULL) override;
-    void put(const std::string& query_string,
-        const Json::Value& body,
-        ResponseHandler response_handler,
-        int timeout = 0, const ApiHeaders *headers = NULL) override;
-    void del(const std::string& query_string,
-        const Json::Value& body,
-        ResponseHandler response_handler,
-        int timeout = 0, const ApiHeaders *headers = NULL) override;
-    void patch(const std::string& query_string,
-        const Json::Value& body,
-        ResponseHandler response_handler,
-        int timeout = 0, const ApiHeaders *headers = NULL) override;
-
- private:
-    const std::string& get_host();
-    std::shared_ptr<boost::asio::streambuf> get_message(
-        http_method_t method,
-        const std::string& query_string,
-        const Json::Value* body,
-        const ApiHeaders *headers = NULL);
-
-    std::shared_ptr<ProtocolClientBase> client_;
 };
 
 }  // namespace apiclient

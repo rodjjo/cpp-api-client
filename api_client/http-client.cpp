@@ -10,7 +10,7 @@ namespace apiclient {
 
 HTTPClient::HTTPClient(std::shared_ptr<ClientIo> client_io,
     location_t location) :
-        ProtocolClientBase(client_io, location.host, location.port) {
+        ProtocolClient(client_io, location.host, location.port) {
 }
 
 HTTPClient::~HTTPClient() {

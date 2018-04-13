@@ -6,7 +6,7 @@
 
 #include <string>
 #include "api_client/apiclient/apiclient.h"
-#include "api_client/protocol-client.h"
+#include "api_client/api-client-io.h"
 
 
 namespace apiclient {

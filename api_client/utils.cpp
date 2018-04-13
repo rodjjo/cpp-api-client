@@ -36,7 +36,7 @@ location_t decompose_url(const std::string& url) {
   }
 
   if (base_match.size() >= 3) {
-    result.valid = 3;
+    result.valid = true;
     if (base_match[1].str() == "https") {
       result.secure = true;
       result.port = 443;

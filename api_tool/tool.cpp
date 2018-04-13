@@ -10,8 +10,6 @@
 #include <apiclient/apiclient.h>
 
 
-
-
 int main(int argc, char** argv) {
     auto api_builder = apiclient::builder(4);
 
@@ -20,7 +18,9 @@ int main(int argc, char** argv) {
     bool finished = false;
 
     printf("Invoking get method\n");
-    api_client->get("/get?test=134", [&finished] (const apiclient::Response& r) {
+    api_client->get("/get?test=134", [&finished] (
+        const apiclient::Response& r
+    ) {
         printf("Parsing the response\n");
         if (r.has_error()) {
             printf("Has error! %d\n", r.get_error());

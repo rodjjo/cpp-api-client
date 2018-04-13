@@ -24,23 +24,12 @@
 
 namespace apiclient {
 
-typedef std::shared_ptr<
-            boost::asio::ssl::stream<boost::asio::ip::tcp::socket>
-        >  sslsocket_t;
-
-typedef boost::asio::ssl::stream<boost::asio::ip::tcp::socket> streamsocket_t;
-
-typedef std::function<void (
-        sslsocket_t ssl_socket
-)> BuildSocketHandler;
-
-
 typedef std::function<void (
     const boost::system::error_code& error,
     std::shared_ptr<ApiSocket> socket
 )> ConnectHandler;
 
-class HTTPClient: public ProtocolClientBase {
+class HTTPClient: public ProtocolClient {
  public:
     HTTPClient(
         std::shared_ptr<ClientIo> client_io, location_t location);
