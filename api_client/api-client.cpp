@@ -3,7 +3,7 @@
  */
 
 #include "api_client/apiclient/apiclient.h"
-#include "api_client/client-builder.h"
+#include "api_client/api-pool-imp.h"
 
 
 namespace apiclient {

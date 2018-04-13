@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef API_CLIENT_CLIENT_BUILDER_H_
-#define API_CLIENT_CLIENT_BUILDER_H_
+#ifndef API_CLIENT_API_POOL_IMP_H_
+#define API_CLIENT_API_POOL_IMP_H_
 
 #include <string>
 #include "api_client/apiclient/apiclient.h"
@@ -23,4 +23,4 @@ class ApiPoolImp: public ApiPool {
 }  // namespace apiclient
 
 
-#endif  // API_CLIENT_CLIENT_BUILDER_H_
+#endif  // API_CLIENT_API_POOL_IMP_H_

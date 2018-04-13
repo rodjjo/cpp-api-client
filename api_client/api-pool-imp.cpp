@@ -2,7 +2,7 @@
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
 #include "api_client/api-client-imp.h"
-#include "api_client/client-builder.h"
+#include "api_client/api-pool-imp.h"
 
 namespace apiclient {
 
