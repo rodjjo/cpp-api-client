@@ -6,17 +6,17 @@
 
 namespace apiclient {
 
-ClientBuilder::ClientBuilder(unsigned char num_threads):
+ClientBuilderImp::ClientBuilderImp(unsigned char num_threads):
     client_io_(new ClientIo(num_threads)
 ) {
 }
 
-ClientBuilder::~ClientBuilder() {
+ClientBuilderImp::~ClientBuilderImp() {
 }
 
-std::shared_ptr<ClientBase> ClientBuilder::client(
+std::shared_ptr<Client> ClientBuilderImp::client(
         const std::string& base_url) {
-    return std::shared_ptr<ClientBase>(new Client(client_io_, base_url));
+    return std::shared_ptr<Client>(new ClientImp(client_io_, base_url));
 }
 
 }  // namespace apiclient

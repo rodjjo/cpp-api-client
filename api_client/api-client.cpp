@@ -8,14 +8,14 @@
 
 namespace apiclient {
 
-ClientBase::~ClientBase() {
+Client::~Client() {
 }
 
-ClientBuilderBase::~ClientBuilderBase() {
+ClientBuilder::~ClientBuilder() {
 }
 
-std::shared_ptr<ClientBuilderBase> builder(unsigned char num_threads) {
-    return std::shared_ptr<ClientBuilderBase> (new ClientBuilder(num_threads));
+std::shared_ptr<ClientBuilder> builder(unsigned char num_threads) {
+    return std::shared_ptr<ClientBuilder> (new ClientBuilderImp(num_threads));
 }
 
 }  // namespace apiclient

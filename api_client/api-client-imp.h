@@ -18,12 +18,12 @@
 
 namespace apiclient {
 
-class Client: public ClientBase {
+class ClientImp: public Client {
  public:
-    Client(std::shared_ptr<ClientIo> client_io,
+    ClientImp(std::shared_ptr<ClientIo> client_io,
         const std::string& base_url,
         asio_ssl::verify_mode ssl_verify_mode = asio_ssl::verify_none);
-    virtual ~Client();
+    virtual ~ClientImp();
     void get(const std::string& query_string,
         ResponseHandler response_handler,
         int timeout = 0, const ApiHeaders *headers = NULL) override;

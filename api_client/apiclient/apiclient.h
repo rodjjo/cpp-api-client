@@ -42,9 +42,9 @@ class Response {
 
 typedef std::function<void(const Response&)> ResponseHandler;
 
-class ClientBase {
+class Client {
  public:
-    virtual ~ClientBase();
+    virtual ~Client();
     virtual void get(const std::string& query_string,
         ResponseHandler response_handler,
         int timeout = 0, const ApiHeaders *headers = NULL) = 0;
@@ -66,13 +66,13 @@ class ClientBase {
         int timeout = 0, const ApiHeaders *headers = NULL) = 0;
 };
 
-class ClientBuilderBase {
+class ClientBuilder {
  public:
-    virtual ~ClientBuilderBase();
-    virtual std::shared_ptr<ClientBase> client(const std::string& base_url) = 0;
+    virtual ~ClientBuilder();
+    virtual std::shared_ptr<Client> client(const std::string& base_url) = 0;
 };
 
-std::shared_ptr<ClientBuilderBase> builder(unsigned char num_threads);
+std::shared_ptr<ClientBuilder> builder(unsigned char num_threads);
 
 }  // namespace apiclient
 

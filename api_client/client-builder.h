@@ -11,11 +11,11 @@
 
 namespace apiclient {
 
-class ClientBuilder: public ClientBuilderBase {
+class ClientBuilderImp: public ClientBuilder {
  public:
-  explicit ClientBuilder(unsigned char num_threads);
-  virtual ~ClientBuilder();
-  std::shared_ptr<ClientBase> client(const std::string& base_url) override;
+  explicit ClientBuilderImp(unsigned char num_threads);
+  virtual ~ClientBuilderImp();
+  std::shared_ptr<Client> client(const std::string& base_url) override;
  private:
   std::shared_ptr<ClientIo> client_io_;
 };

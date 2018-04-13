@@ -9,7 +9,7 @@
 
 namespace apiclient {
 
-Client::Client(std::shared_ptr<ClientIo> client_io,
+ClientImp::ClientImp(std::shared_ptr<ClientIo> client_io,
     const std::string& base_url, asio_ssl::verify_mode ssl_verify_mode) {
   location_t fragments = apiclient::decompose_url(base_url);
   if (!fragments.valid) {
@@ -23,14 +23,14 @@ Client::Client(std::shared_ptr<ClientIo> client_io,
   }
 }
 
-Client::~Client() {
+ClientImp::~ClientImp() {
 }
 
-const std::string& Client::get_host() {
+const std::string& ClientImp::get_host() {
     return client_->get_host();
 }
 
-std::shared_ptr<boost::asio::streambuf> Client::get_message(
+std::shared_ptr<boost::asio::streambuf> ClientImp::get_message(
     http_method_t method,
     const std::string& query_string,
     const Json::Value* body,
@@ -44,7 +44,7 @@ std::shared_ptr<boost::asio::streambuf> Client::get_message(
     return message;
 }
 
-void Client::get(
+void ClientImp::get(
     const std::string& query_string,
     ResponseHandler response_handler,
     int timeout,
@@ -54,7 +54,7 @@ void Client::get(
     client_->request(message, response_handler, timeout);
 }
 
-void Client::post(
+void ClientImp::post(
     const std::string& query_string,
     const Json::Value& body,
     ResponseHandler response_handler,
@@ -65,7 +65,7 @@ void Client::post(
     client_->request(message, response_handler, timeout);
 }
 
-void Client::put(const std::string& query_string,
+void ClientImp::put(const std::string& query_string,
         const Json::Value& body,
         ResponseHandler response_handler,
         int timeout, const ApiHeaders *headers) {
@@ -73,7 +73,7 @@ void Client::put(const std::string& query_string,
     client_->request(message, response_handler, timeout);
 }
 
-void Client::del(const std::string& query_string,
+void ClientImp::del(const std::string& query_string,
         const Json::Value& body,
         ResponseHandler response_handler,
         int timeout, const ApiHeaders *headers) {
@@ -81,7 +81,7 @@ void Client::del(const std::string& query_string,
     client_->request(message, response_handler, timeout);
 }
 
-void Client::patch(const std::string& query_string,
+void ClientImp::patch(const std::string& query_string,
         const Json::Value& body,
         ResponseHandler response_handler,
         int timeout, const ApiHeaders *headers) {
