@@ -66,13 +66,13 @@ class Client {
         int timeout = 0, const ApiHeaders *headers = NULL) = 0;
 };
 
-class ClientBuilder {
+class ApiPool {
  public:
-    virtual ~ClientBuilder();
-    virtual std::shared_ptr<Client> client(const std::string& base_url) = 0;
+    virtual ~ApiPool();
+    virtual std::shared_ptr<Client> api(const std::string& base_url) = 0;
 };
 
-std::shared_ptr<ClientBuilder> builder(unsigned char num_threads);
+std::shared_ptr<ApiPool> pool(unsigned char num_threads);
 
 }  // namespace apiclient
 

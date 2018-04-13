@@ -11,11 +11,11 @@ namespace apiclient {
 Client::~Client() {
 }
 
-ClientBuilder::~ClientBuilder() {
+ApiPool::~ApiPool() {
 }
 
-std::shared_ptr<ClientBuilder> builder(unsigned char num_threads) {
-    return std::shared_ptr<ClientBuilder> (new ClientBuilderImp(num_threads));
+std::shared_ptr<ApiPool> pool(unsigned char num_threads) {
+    return std::shared_ptr<ApiPool> (new ApiPoolImp(num_threads));
 }
 
 }  // namespace apiclient

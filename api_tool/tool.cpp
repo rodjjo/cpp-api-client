@@ -11,9 +11,9 @@
 
 
 int main(int argc, char** argv) {
-    auto api_builder = apiclient::builder(4);
+    auto api_pool = apiclient::pool(4);
 
-    auto api_client = api_builder->client("https://httpbin.org");
+    auto api_client = api_pool->api("https://httpbin.org");
 
     bool finished = false;
 
