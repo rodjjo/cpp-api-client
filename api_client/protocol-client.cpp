@@ -56,7 +56,7 @@ void ProtocolClient::delivery_response(
     response_handler(Response(body, headers, status));
 }
 
-void ProtocolClient::make_request(
+void ProtocolClient::request(
         std::shared_ptr<boost::asio::streambuf> message,
         ResponseHandler response_handler,
         int timeout) {
@@ -68,7 +68,7 @@ void ProtocolClient::make_request(
             return;
         }
 
-        make_request(iter, message, response_handler, timeout);
+        request(iter, message, response_handler, timeout);
     });
 }
 

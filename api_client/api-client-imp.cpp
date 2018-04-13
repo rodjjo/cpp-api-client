@@ -36,7 +36,8 @@ std::shared_ptr<boost::asio::streambuf> Client::get_message(
     const Json::Value* body,
     const ApiHeaders *headers
 ) {
-    auto message = std::shared_ptr<boost::asio::streambuf>(new boost::asio::streambuf());
+    auto message = std::shared_ptr<boost::asio::streambuf>(
+        new boost::asio::streambuf());
 
     compose_request(method, get_host(), query_string, headers, body, message.get());
 
@@ -50,7 +51,7 @@ void Client::get(
     const ApiHeaders *headers
 ) {
     auto message(get_message(http_get, query_string, NULL, headers));
-    client_->make_request(message, response_handler, timeout);
+    client_->request(message, response_handler, timeout);
 }
 
 void Client::post(
@@ -61,7 +62,7 @@ void Client::post(
     const ApiHeaders *headers
 ) {
     auto message(get_message(http_post, query_string, &body, headers));
-    client_->make_request(message, response_handler, timeout);
+    client_->request(message, response_handler, timeout);
 }
 
 void Client::put(const std::string& query_string,
@@ -69,7 +70,7 @@ void Client::put(const std::string& query_string,
         ResponseHandler response_handler,
         int timeout, const ApiHeaders *headers) {
     auto message(get_message(http_put, query_string, &body, headers));
-    client_->make_request(message, response_handler, timeout);
+    client_->request(message, response_handler, timeout);
 }
 
 void Client::del(const std::string& query_string,
@@ -77,7 +78,7 @@ void Client::del(const std::string& query_string,
         ResponseHandler response_handler,
         int timeout, const ApiHeaders *headers) {
     auto message(get_message(http_delete, query_string, &body, headers));
-    client_->make_request(message, response_handler, timeout);
+    client_->request(message, response_handler, timeout);
 }
 
 void Client::patch(const std::string& query_string,
@@ -85,7 +86,7 @@ void Client::patch(const std::string& query_string,
         ResponseHandler response_handler,
         int timeout, const ApiHeaders *headers) {
     auto message(get_message(http_patch, query_string, &body, headers));
-    client_->make_request(message, response_handler, timeout);
+    client_->request(message, response_handler, timeout);
 }
 
 }  // namespace apiclient

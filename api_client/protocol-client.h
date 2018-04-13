@@ -25,7 +25,7 @@ class ProtocolClient {
         int port);
 
     virtual ~ProtocolClient();
-    virtual void make_request(
+    virtual void request(
         boost::asio::ip::tcp::resolver::iterator iter,
         std::shared_ptr<boost::asio::streambuf> message,
         ResponseHandler response_handler,
@@ -37,7 +37,7 @@ class ProtocolClient {
     void delivery_response(
         std::stringstream& data,
         ResponseHandler response_handler);
-    void make_request(
+    void request(
         std::shared_ptr<boost::asio::streambuf> message,
         ResponseHandler response_handler,
         int timeout);

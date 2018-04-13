@@ -16,7 +16,7 @@ HTTPClient::HTTPClient(std::shared_ptr<ClientIo> client_io,
 HTTPClient::~HTTPClient() {
 }
 
-void HTTPClient::process_response(
+void HTTPClient::retrive_response(
     std::shared_ptr<ApiSocket> api_socket,
     std::shared_ptr<boost::asio::streambuf> buffer,
     std::shared_ptr<std::stringstream> data,
@@ -44,7 +44,7 @@ void HTTPClient::process_response(
                     (*data.get()) << &(*buffer.get());
                 }
 
-                process_response(
+                retrive_response(
                     api_socket, buffer, data, response_handler);
             }
         };
@@ -90,7 +90,36 @@ void HTTPClient::connect(
     }
 }
 
-void HTTPClient::make_request(
+void HTTPClient::send_request(
+    std::shared_ptr<ApiSocket> api_socket,
+    std::shared_ptr<boost::asio::streambuf> message,
+    SendRequestHandler send_handler
+) {
+    auto write_handler = [api_socket, send_handler] (
+        const boost::system::error_code& err,
+        std::size_t bytestransfered
+    ) {
+        if (err) {
+            send_handler(err);
+            return;
+        }
+
+        send_handler(boost::system::errc::make_error_code(
+            boost::system::errc::success));
+    };
+
+    if (api_socket->is_secure()) {
+        boost::asio::async_write(
+            *api_socket->get_secure_socket(),
+            *message.get(),
+            write_handler);
+    } else {
+        boost::asio::async_write(
+            *api_socket->get_socket(), *message.get(), write_handler);
+    }
+}
+
+void HTTPClient::request(
     boost::asio::ip::tcp::resolver::iterator iter,
     std::shared_ptr<boost::asio::streambuf> message,
     ResponseHandler response_handler,
@@ -101,16 +130,15 @@ void HTTPClient::make_request(
         std::shared_ptr<ApiSocket> api_socket
     ) {
         if (err) {
-            response_handler(apiclient::Response(err.value()));
+            response_handler(Response(err.value()));
             return;
         }
 
-        auto write_handler = [this, api_socket, response_handler] (
-            const boost::system::error_code& err,
-            std::size_t bytestransfered
-        ) {
+        send_request(api_socket,  message, [
+            this, api_socket, response_handler
+        ] (const boost::system::error_code& err) {
             if (err) {
-                response_handler(apiclient::Response(err.value()));
+                response_handler(Response(err.value()));
                 return;
             }
 
@@ -119,19 +147,9 @@ void HTTPClient::make_request(
             std::shared_ptr<std::stringstream> data(
                 new std::stringstream());
 
-            process_response(
+            retrive_response(
                 api_socket, buffer, data, response_handler);
-        };
-
-        if (api_socket->is_secure()) {
-            boost::asio::async_write(
-                *api_socket->get_secure_socket(),
-                *message.get(),
-                write_handler);
-        } else {
-            boost::asio::async_write(
-                *api_socket->get_socket(), *message.get(), write_handler);
-        }
+        });
     });
 }
 

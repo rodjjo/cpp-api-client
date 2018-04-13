@@ -29,24 +29,35 @@ typedef std::function<void (
     std::shared_ptr<ApiSocket> socket
 )> ConnectHandler;
 
+typedef std::function<void (
+    const boost::system::error_code& err
+)> SendRequestHandler;
+
 class HTTPClient: public ProtocolClient {
  public:
     HTTPClient(
         std::shared_ptr<ClientIo> client_io, location_t location);
     virtual ~HTTPClient();
 
+
+    void request(
+        boost::asio::ip::tcp::resolver::iterator iter,
+        std::shared_ptr<boost::asio::streambuf> message,
+        ResponseHandler response_handler,
+        int timeout);
+
+ protected:
     virtual void connect(
         boost::asio::ip::tcp::resolver::iterator iter,
         unsigned int timeout,
         ConnectHandler handler);
 
-    virtual void make_request(
-        boost::asio::ip::tcp::resolver::iterator iter,
-        std::shared_ptr<boost::asio::streambuf> message,
-        ResponseHandler response_handler,
-        int timeout);
  private:
-    void process_response(std::shared_ptr<ApiSocket> api_socket,
+    void send_request(
+        std::shared_ptr<ApiSocket> api_socket,
+        std::shared_ptr<boost::asio::streambuf> message,
+        SendRequestHandler send_handler);
+    void retrive_response(std::shared_ptr<ApiSocket> api_socket,
         std::shared_ptr<boost::asio::streambuf> buffer,
         std::shared_ptr<std::stringstream> data,
         ResponseHandler response_handler);
