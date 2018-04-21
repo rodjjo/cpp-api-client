@@ -1,12 +1,18 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required(VERSION 3.9.0 FATAL_ERROR)
 
-set (CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 14)
 
 project(ApiClient C CXX)
 
 find_package(Threads)
 find_package(OpenSSL)
-find_package(Boost COMPONENTS system filesystem unit_test_framework thread REQUIRED)
+find_package(Boost
+            COMPONENTS
+            system
+            filesystem
+            unit_test_framework
+            thread
+            REQUIRED)
 
 find_package(PkgConfig REQUIRED)
 
